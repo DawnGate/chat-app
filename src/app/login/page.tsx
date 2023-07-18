@@ -1,7 +1,10 @@
+import CTextField from '@/components/CTextField';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import { grey } from '@mui/material/colors';
 import Image from 'next/image';
 
 function LoginPage() {
@@ -47,9 +50,38 @@ function LoginPage() {
               },
             }}
           >
-            <Typography variant="h5" fontWeight="medium" textAlign="center">
+            <Typography variant="h5" fontWeight={600} textAlign="center">
               Log in
             </Typography>
+            <Box mt={2}>
+              <CTextField
+                label="Login, email or phone number"
+                formId="login-email-phone-number"
+              />
+            </Box>
+            <Box mt={2}>
+              <CTextField label="Password" formId="login-password" />
+            </Box>
+            <Button
+              variant="contained"
+              sx={{
+                borderRadius: 9999,
+                mt: 2,
+                py: '10px',
+                background: grey[700],
+
+                color: 'white',
+                textTransform: 'inherit',
+                fontWeight: 600,
+                ':hover': {
+                  background: grey[600],
+                },
+              }}
+              fullWidth
+              color="inherit"
+            >
+              Log in
+            </Button>
           </Card>
         </Box>
       </Grid>
