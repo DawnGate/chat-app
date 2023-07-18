@@ -14,7 +14,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: 'Chat app',
+  title: 'Chat box',
   description: 'Real time chat application',
 };
 
