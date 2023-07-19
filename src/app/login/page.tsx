@@ -4,12 +4,26 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { grey } from '@mui/material/colors';
+import { blue } from '@mui/material/colors';
+
+// images
+import backgroundLogin from '@/assets/images/login-background.jpg';
+
+// next
 import Image from 'next/image';
 
 function LoginPage() {
   return (
-    <Grid container height="100%">
+    <Grid
+      container
+      sx={{
+        background: '#fff 50%',
+        backgroundImage: `url(${backgroundLogin.src})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        minHeight: '100%',
+      }}
+    >
       <Grid
         item
         xs={0}
@@ -19,12 +33,17 @@ function LoginPage() {
           xs: 'none',
           sm: 'block',
         }}
+        paddingRight={{
+          sm: 3,
+          md: 6,
+          lg: 9,
+        }}
       >
         <Box
           display="flex"
           gap={1}
           alignItems="center"
-          justifyContent="center"
+          justifyContent="end"
           height="100%"
         >
           <Image src={'/chat.svg'} width={40} height={40} alt={'Logo'} />
@@ -34,7 +53,7 @@ function LoginPage() {
         </Box>
       </Grid>
       <Grid item xs={12} sm={8} md={6} px={2}>
-        <Box display="flex" height="100%" alignItems="center" py={2}>
+        <Box display="flex" alignItems="center" py={2} height="100%">
           <Card
             sx={{
               p: {
@@ -42,7 +61,7 @@ function LoginPage() {
                 sm: 3,
                 md: 5,
               },
-              maxWidth: 500,
+              maxWidth: ['none', 500],
               width: '100%',
               height: {
                 xs: '100%',
@@ -67,20 +86,21 @@ function LoginPage() {
               sx={{
                 borderRadius: 9999,
                 mt: 2,
-                py: '10px',
-                background: grey[700],
-
+                py: 1.5,
+                background: blue[700],
                 color: 'white',
                 textTransform: 'inherit',
                 fontWeight: 600,
                 ':hover': {
-                  background: grey[600],
+                  background: blue[600],
                 },
               }}
               fullWidth
               color="inherit"
             >
-              Log in
+              <Typography variant="body1" fontWeight={600}>
+                Log in
+              </Typography>
             </Button>
           </Card>
         </Box>

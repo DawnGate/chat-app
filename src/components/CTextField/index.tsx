@@ -4,17 +4,18 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import InputBase from '@mui/material/InputBase';
 import { alpha, styled } from '@mui/material/styles';
+import { FormHelperText } from '@mui/material';
 
 const InputBox = styled(InputBase)(({ theme }) => ({
   '&': {
     marginTop: theme.spacing(2.5),
   },
   '& .MuiInputBase-input': {
-    borderRadius: '9999px',
+    borderRadius: '20px',
     position: 'relative',
     border: '1px solid',
     borderColor: theme.palette.grey[400],
-    padding: '10px 12px',
+    padding: `${theme.spacing(1.25)} ${theme.spacing(2)}`,
     transition: theme.transitions.create([
       'border-color',
       'background-color',
@@ -30,6 +31,7 @@ const InputBox = styled(InputBase)(({ theme }) => ({
 interface Props {
   label: string;
   formId: string;
+  helperText?: string;
 }
 
 const CTextField = (props: Props) => {
@@ -43,6 +45,11 @@ const CTextField = (props: Props) => {
         {props.label}
       </InputLabel>
       <InputBox id={props.formId} />
+      {props.helperText && (
+        <FormHelperText sx={(theme) => ({ textIndent: theme.spacing(2) })}>
+          {props.helperText}
+        </FormHelperText>
+      )}
     </FormControl>
   );
 };
