@@ -1,13 +1,16 @@
 'use client';
 
+/* eslint-disable react/jsx-props-no-spreading */
+
+// mui
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import FormHelperText from '@mui/material/FormHelperText';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { alpha, styled } from '@mui/material/styles';
-import { FormHelperText } from '@mui/material';
 
-// react
-import { ReactNode } from 'react';
+// third party
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 const InputBox = styled(InputBase)(({ theme }) => ({
   '&': {
@@ -40,33 +43,36 @@ interface Props {
   helperText?: string;
   error?: boolean;
   inputBoxProps?: {
-    register?: any;
+    register?: UseFormRegisterReturn;
   } & InputBaseProps;
 }
 
 function CTextField(props: Props) {
+  // destructure value
+  const { label, formId, helperText, error, inputBoxProps } = props;
   // return
+
   return (
-    <FormControl variant="standard" error={props.error} fullWidth>
-      <InputLabel
-        shrink
-        htmlFor={props.formId}
-        sx={{ ml: 2, fontWeight: 'medium' }}
-      >
-        {props.label}
+    <FormControl variant="standard" error={error} fullWidth>
+      <InputLabel shrink htmlFor={formId} sx={{ ml: 2, fontWeight: 'medium' }}>
+        {label}
       </InputLabel>
-      <InputBox
-        id={props.formId}
-        {...props.inputBoxProps?.register}
-        {...props.inputBoxProps}
-      />
-      {props.helperText && (
+      <InputBox id={formId} {...inputBoxProps?.register} {...inputBoxProps} />
+      {helperText && (
         <FormHelperText sx={(theme) => ({ textIndent: theme.spacing(2) })}>
-          {props.helperText}
+          {helperText}
         </FormHelperText>
       )}
     </FormControl>
   );
 }
+
+CTextField.defaultProps = {
+  helperText: '',
+  error: false,
+  inputBoxProps: {
+    register: null,
+  },
+};
 
 export default CTextField;

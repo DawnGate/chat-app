@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 function SignUpLayout({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return children;
 }
 
 export default SignUpLayout;

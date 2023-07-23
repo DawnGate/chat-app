@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 function LoginLayout({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return children;
 }
 
 export default LoginLayout;
