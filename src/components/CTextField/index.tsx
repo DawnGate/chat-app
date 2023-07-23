@@ -2,19 +2,23 @@
 
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import InputBase from '@mui/material/InputBase';
+import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { alpha, styled } from '@mui/material/styles';
 import { FormHelperText } from '@mui/material';
+
+// react
+import { ReactNode } from 'react';
 
 const InputBox = styled(InputBase)(({ theme }) => ({
   '&': {
     marginTop: theme.spacing(2.5),
+    border: '1px solid',
+    borderColor: theme.palette.grey[400],
+    borderRadius: '20px',
   },
   '& .MuiInputBase-input': {
     borderRadius: '20px',
     position: 'relative',
-    border: '1px solid',
-    borderColor: theme.palette.grey[400],
     padding: `${theme.spacing(1.25)} ${theme.spacing(2)}`,
     transition: theme.transitions.create([
       'border-color',
@@ -25,6 +29,8 @@ const InputBox = styled(InputBase)(({ theme }) => ({
       boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
       borderColor: theme.palette.primary.main,
     },
+    fontSize: theme.typography.pxToRem(14),
+    fontWeight: 500,
   },
 }));
 
@@ -32,11 +38,18 @@ interface Props {
   label: string;
   formId: string;
   helperText?: string;
+  error?: boolean;
+  inputBoxProps?: {
+    register?: any;
+    inputBoxType?: string;
+    endAdornment?: ReactNode;
+    autoComplete?: string;
+  } & InputBaseProps;
 }
 
 const CTextField = (props: Props) => {
   return (
-    <FormControl variant="standard" fullWidth>
+    <FormControl variant="standard" error={props.error} fullWidth>
       <InputLabel
         shrink
         htmlFor={props.formId}
@@ -44,7 +57,14 @@ const CTextField = (props: Props) => {
       >
         {props.label}
       </InputLabel>
-      <InputBox id={props.formId} />
+      <InputBox
+        id={props.formId}
+        type={props.inputBoxProps?.inputBoxType}
+        {...props.inputBoxProps?.register}
+        endAdornment={props.inputBoxProps?.endAdornment}
+        autoComplete={props.inputBoxProps?.autoComplete}
+        sx={props.inputBoxProps?.sx}
+      />
       {props.helperText && (
         <FormHelperText sx={(theme) => ({ textIndent: theme.spacing(2) })}>
           {props.helperText}
