@@ -1,10 +1,28 @@
 'use client';
 
-import CTextField from '@/components/CTextField';
+// next
+import Link from 'next/link';
+import Image from 'next/image';
+
+// hooks
+import { useState } from 'react';
+
+// icons
+import passwordHideIcon from '@/assets/icons/PasswordHide.svg';
+import passwordShowIcon from '@/assets/icons/PasswordShow.svg';
+
+// mui
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+
+// colors
 import { blue } from '@mui/material/colors';
+
+// components
+import CTextField from '@/components/CTextField';
 
 // third party
 import { useForm } from 'react-hook-form';
@@ -25,19 +43,6 @@ const userScheme = z.object({
 
 // types
 type UserScheme = z.infer<typeof userScheme>;
-
-// next
-import Link from 'next/link';
-
-// hooks
-import { useState } from 'react';
-import { IconButton, InputAdornment } from '@mui/material';
-
-// images
-import Image from 'next/image';
-
-import passwordHideIcon from '@/assets/icons/PasswordHide.svg';
-import passwordShowIcon from '@/assets/icons/PasswordShow.svg';
 
 function LoginPage() {
   // hooks
@@ -71,8 +76,10 @@ function LoginPage() {
             error={Boolean(errors.email)}
             helperText={errors.email?.message}
             inputBoxProps={{
+              type: 'email',
               autoComplete: 'email',
               register: register('email'),
+              autoFocus: true,
             }}
           />
         </Box>
@@ -83,7 +90,7 @@ function LoginPage() {
             error={Boolean(errors.password)}
             helperText={errors.password?.message}
             inputBoxProps={{
-              inputBoxType: showPassword ? 'text' : 'password',
+              type: showPassword ? 'text' : 'password',
               register: register('password'),
               autoComplete: 'password',
               endAdornment: (
@@ -98,7 +105,7 @@ function LoginPage() {
                     onClick={() => {
                       setShowPassword((prev) => !prev);
                     }}
-                    disableRipple={true}
+                    disableRipple
                   >
                     <Image
                       priority

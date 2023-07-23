@@ -41,13 +41,11 @@ interface Props {
   error?: boolean;
   inputBoxProps?: {
     register?: any;
-    inputBoxType?: string;
-    endAdornment?: ReactNode;
-    autoComplete?: string;
   } & InputBaseProps;
 }
 
-const CTextField = (props: Props) => {
+function CTextField(props: Props) {
+  // return
   return (
     <FormControl variant="standard" error={props.error} fullWidth>
       <InputLabel
@@ -59,11 +57,8 @@ const CTextField = (props: Props) => {
       </InputLabel>
       <InputBox
         id={props.formId}
-        type={props.inputBoxProps?.inputBoxType}
         {...props.inputBoxProps?.register}
-        endAdornment={props.inputBoxProps?.endAdornment}
-        autoComplete={props.inputBoxProps?.autoComplete}
-        sx={props.inputBoxProps?.sx}
+        {...props.inputBoxProps}
       />
       {props.helperText && (
         <FormHelperText sx={(theme) => ({ textIndent: theme.spacing(2) })}>
@@ -72,6 +67,6 @@ const CTextField = (props: Props) => {
       )}
     </FormControl>
   );
-};
+}
 
 export default CTextField;

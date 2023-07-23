@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   description: 'Login page - Real time chat application',
 };
 
-const LoginLayout = ({ children }: { children: ReactNode }) => {
+function LoginLayout({ children }: { children: ReactNode }) {
   return <>{children}</>;
-};
+}
 
 export default LoginLayout;

@@ -11,7 +11,7 @@ import backgroundLogin from '@/assets/images/login-background.jpg';
 
 import { ReactNode } from 'react';
 
-const LoginLayout = ({ children }: { children: ReactNode }) => {
+function LoginLayout({ children }: { children: ReactNode }) {
   return (
     <Box minHeight="100vh" height="100%">
       <Grid
@@ -46,7 +46,7 @@ const LoginLayout = ({ children }: { children: ReactNode }) => {
             justifyContent="end"
             height="100%"
           >
-            <Image src={'/chat.svg'} width={40} height={40} alt={'Logo'} />
+            <Image src="/chat.svg" width={40} height={40} alt="Logo" />
             <Typography variant="h6" fontWeight="bold" color="dark">
               Chatbox
             </Typography>
@@ -76,6 +76,6 @@ const LoginLayout = ({ children }: { children: ReactNode }) => {
       </Grid>
     </Box>
   );
-};
+}
 
 export default LoginLayout;

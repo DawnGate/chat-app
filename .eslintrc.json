@@ -8,12 +8,7 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended"
   ],
-  "plugins": [
-    "@typescript-eslint",
-    "react",
-    "react-hooks",
-    "tss-unused-classes"
-  ],
+  "plugins": ["@typescript-eslint", "react", "tss-unused-classes"],
   "parserOptions": {
     "ecmaVersion": 2021,
     "sourceType": "module",

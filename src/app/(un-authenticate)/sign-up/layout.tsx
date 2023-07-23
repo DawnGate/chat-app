@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   description: 'Sign up - Let give a try - Real time chat application',
 };
 
-const SignUpLayout = ({ children }: { children: ReactNode }) => {
+function SignUpLayout({ children }: { children: ReactNode }) {
   return <>{children}</>;
-};
+}
 
 export default SignUpLayout;
