@@ -25,7 +25,8 @@
     "react/no-unescaped-entities": ["off"],
     "linebreak-style": ["off"],
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-    "tss-unused-classes/unused-classes": "warn"
+    "tss-unused-classes/unused-classes": "warn",
+    "react/require-default-props": ["off"]
   },
   "ignorePatterns": ["build/"]
 }

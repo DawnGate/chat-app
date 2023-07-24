@@ -1,5 +1,3 @@
-'use client';
-
 /* eslint-disable react/jsx-props-no-spreading */
 
 // mui
@@ -49,7 +47,15 @@ interface Props {
 
 function CTextField(props: Props) {
   // destructure value
-  const { label, formId, helperText, error, inputBoxProps } = props;
+  const {
+    label = 'Test',
+    formId = 'test',
+    helperText = '',
+    error = false,
+    inputBoxProps = {
+      register: null,
+    },
+  } = props;
   // return
 
   return (
@@ -66,13 +72,5 @@ function CTextField(props: Props) {
     </FormControl>
   );
 }
-
-CTextField.defaultProps = {
-  helperText: '',
-  error: false,
-  inputBoxProps: {
-    register: null,
-  },
-};
 
 export default CTextField;
