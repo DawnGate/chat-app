@@ -29,6 +29,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
 
+// hooks
+import { useRouter } from 'next/navigation';
+
 const userScheme = z.object({
   email: z
     .string()
@@ -53,6 +56,7 @@ function LoginPage() {
   } = useForm<UserScheme>({
     resolver: zodResolver(userScheme),
   });
+  const router = useRouter();
 
   // state
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -60,6 +64,7 @@ function LoginPage() {
   // events
   const handleOnSubmit = (data: UserScheme) => {
     console.log('hey', data);
+    router.push('/app');
   };
 
   // render
