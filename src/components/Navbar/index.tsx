@@ -3,8 +3,10 @@
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 
+import DrawerContent from './DrawerContent';
+
 // constant
-const NAV_WIDTH = 80;
+const NAV_WIDTH = 60;
 
 function NavBar({
   handleDrawerToggle,
@@ -16,10 +18,10 @@ function NavBar({
   const container =
     typeof window !== 'undefined' ? () => window.document.body : undefined;
 
-  const drawer = <p>Hey</p>;
+  const drawer = <DrawerContent />;
 
   return (
-    <Box component="nav">
+    <>
       <Drawer
         container={container}
         variant="temporary"
@@ -31,6 +33,7 @@ function NavBar({
         sx={{
           display: { xs: 'block', sm: 'none' },
           '& .MuiDrawer-paper': { width: NAV_WIDTH },
+          width: NAV_WIDTH,
         }}
       >
         {drawer}
@@ -40,12 +43,13 @@ function NavBar({
         sx={{
           display: { xs: 'none', sm: 'block' },
           '& .MuiDrawer-paper': { width: NAV_WIDTH },
+          width: NAV_WIDTH,
         }}
         open
       >
         {drawer}
       </Drawer>
-    </Box>
+    </>
   );
 }
 export default NavBar;

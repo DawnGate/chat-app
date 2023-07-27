@@ -1,20 +1,7 @@
-'use client';
-
-import Backdrop from '@mui/material/Backdrop';
-
-import { DotLottiePlayer } from '@dotlottie/react-player';
+import GlobalLoading from '@/components/GlobalLoading';
 
 function Loading() {
-  return (
-    <Backdrop open>
-      <DotLottiePlayer
-        autoplay
-        loop
-        src="/boatLoading.lottie"
-        style={{ height: '300px', width: '300px' }}
-      />
-    </Backdrop>
-  );
+  return <GlobalLoading />;
 }
 
 export default Loading;
