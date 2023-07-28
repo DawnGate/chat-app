@@ -1,5 +1,5 @@
 html {
-  overflow-y: scroll;
+  scrollbar-gutter: stable;
   text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;

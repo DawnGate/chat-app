@@ -1,4 +1,9 @@
+'use client';
+
+import { usePathname } from 'next/navigation';
+
 import Image from 'next/image';
+import Link from 'next/link';
 
 import {
   MessageSquare,
@@ -9,22 +14,28 @@ import {
 } from 'react-feather';
 
 import Box from '@mui/material/Box';
-import Link from 'next/link';
-
-import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 
 import DrawerItemIcon from './DrawerItemIcon';
+import DrawerDivider from '../CDivider';
 
-function DrawerDivider() {
-  return (
-    <Box paddingX={1} marginY={1}>
-      <Divider />
-    </Box>
-  );
-}
+const chatRoutes = { chat: '/chat', chatSettings: '/chat/settings' };
 
 function DrawerContent() {
+  // init value
+  const chatRoutesPath = Object.values(chatRoutes);
+  // hooks
+  const pathname = usePathname();
+
+  // local variables
+  let selectedRoute = chatRoutesPath[0];
+  chatRoutesPath.forEach((item) => {
+    if (pathname.startsWith(item)) {
+      selectedRoute = item;
+    }
+  });
+
+  // render
   return (
     <Box
       sx={{
@@ -41,7 +52,10 @@ function DrawerContent() {
           </Box>
         }
       >
-        <DrawerItemIcon selected>
+        <DrawerItemIcon
+          href={chatRoutes.chat}
+          selected={selectedRoute === chatRoutes.chat}
+        >
           <MessageSquare />
         </DrawerItemIcon>
         <DrawerItemIcon>
@@ -53,10 +67,13 @@ function DrawerContent() {
         <DrawerItemIcon>
           <LifeBuoy />
         </DrawerItemIcon>
-        <DrawerItemIcon>
+        <DrawerItemIcon
+          href={chatRoutes.chatSettings}
+          selected={selectedRoute === chatRoutes.chatSettings}
+        >
           <Settings />
         </DrawerItemIcon>
-        <DrawerItemIcon color="error" href="..">
+        <DrawerItemIcon color="error">
           <LogOut />
         </DrawerItemIcon>
       </List>
