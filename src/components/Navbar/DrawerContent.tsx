@@ -10,41 +10,11 @@ import {
 
 import Box from '@mui/material/Box';
 import Link from 'next/link';
-import { ReactNode } from 'react';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemButton from '@mui/material/ListItemButton';
+
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 
-type Color =
-  | 'primary'
-  | 'secondary'
-  | 'error'
-  | 'warning'
-  | 'error'
-  | 'success';
-
-function DrawerItemIcon({
-  children,
-  color = 'primary',
-}: {
-  children: ReactNode;
-  color?: Color;
-}) {
-  return (
-    <ListItemButton
-      sx={(theme) => ({
-        ...(color && {
-          color: theme.palette[color].main,
-        }),
-        borderRadius: 1,
-        justifyContent: 'center',
-      })}
-    >
-      <ListItemIcon sx={{ minWidth: 0 }}>{children}</ListItemIcon>
-    </ListItemButton>
-  );
-}
+import DrawerItemIcon from './DrawerItemIcon';
 
 function DrawerDivider() {
   return (
@@ -71,7 +41,7 @@ function DrawerContent() {
           </Box>
         }
       >
-        <DrawerItemIcon>
+        <DrawerItemIcon selected>
           <MessageSquare />
         </DrawerItemIcon>
         <DrawerItemIcon>
@@ -86,7 +56,7 @@ function DrawerContent() {
         <DrawerItemIcon>
           <Settings />
         </DrawerItemIcon>
-        <DrawerItemIcon color="error">
+        <DrawerItemIcon color="error" href="..">
           <LogOut />
         </DrawerItemIcon>
       </List>
