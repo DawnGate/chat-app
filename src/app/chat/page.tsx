@@ -2,6 +2,8 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import CDivider from '@/components/CDivider';
 import { dividerColor } from '@/config/colors';
+import LeftChatHeader from '@/components/LeftChat/Header';
+import LeftChat from '@/components/LeftChat';
 
 const HEADER_HEIGHT = 50;
 
@@ -21,9 +23,11 @@ function ChatPage() {
           borderColor: dividerColor,
         }}
       >
-        <Box height={HEADER_HEIGHT}>Header Left Chat</Box>
+        <Box height={HEADER_HEIGHT}>
+          <LeftChatHeader />
+        </Box>
         <CDivider />
-        Left Chat
+        <LeftChat />
       </Box>
       <Box
         className="RightChat"

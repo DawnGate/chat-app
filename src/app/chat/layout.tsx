@@ -2,16 +2,9 @@
 
 import { ReactNode, useState } from 'react';
 
-import type { Metadata } from 'next';
-
 import Box from '@mui/material/Box';
 
 import NavBar from '@/components/Navbar';
-
-export const metadata: Metadata = {
-  title: 'Chat box - Messages',
-  description: 'Real time chat application',
-};
 
 function AppLayout({ children }: { children: ReactNode }) {
   // local state
