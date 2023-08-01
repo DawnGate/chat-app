@@ -2,6 +2,7 @@ import PushPinIcon from '@mui/icons-material/PushPin';
 import { textColor } from '@/config/colors';
 
 import ContentBox from './ContentBox';
+import UserItem from './UserItem';
 
 function PinChats() {
   return (
@@ -16,7 +17,7 @@ function PinChats() {
         />
       }
     >
-      Hello
+      <UserItem />
     </ContentBox>
   );
 }

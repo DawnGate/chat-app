@@ -21,7 +21,7 @@ function ContentBox({
           variant="caption"
           textTransform="uppercase"
           sx={{
-            ...captionTypo,
+            fontSize: captionTypo.medium,
             fontWeight: 500,
             color: textColor.lighter,
           }}
