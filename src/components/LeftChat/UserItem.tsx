@@ -7,7 +7,15 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
 
-import { badgeColor, primaryColor, textColor } from '@/config/colors';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import PhoneCallbackIcon from '@mui/icons-material/PhoneCallback';
+
+import {
+  badgeColor,
+  errorColor,
+  primaryColor,
+  textColor,
+} from '@/config/colors';
 
 import {
   captionTypo,
@@ -22,7 +30,13 @@ enum STATUS {
   READ,
 }
 
-function BadgeBox({ count, color = 'red' }: { count: number; color?: string }) {
+function BadgeBox({
+  count,
+  color = errorColor.main,
+}: {
+  count: number;
+  color?: string;
+}) {
   return (
     <Box
       sx={{
@@ -52,6 +66,26 @@ function StatusIcon({ status }: { status: STATUS }) {
       break;
     case STATUS.NEW_MESSAGE:
       content = <BadgeBox count={3} color={textColor.light} />;
+      break;
+    case STATUS.READ:
+      content = (
+        <DoneAllIcon
+          sx={{
+            fontSize: '20px',
+            color: badgeColor,
+          }}
+        />
+      );
+      break;
+    case STATUS.MISS_CALL:
+      content = (
+        <PhoneCallbackIcon
+          sx={{
+            fontSize: '20px',
+            color: errorColor.main,
+          }}
+        />
+      );
       break;
     default:
       break;
@@ -115,7 +149,7 @@ function UserItem() {
         </Box>
         <Box width={30}>
           <Box display="flex" justifyContent="center" mb={0.5}>
-            <StatusIcon status={STATUS.NEW_MESSAGE} />
+            <StatusIcon status={STATUS.READ} />
           </Box>
           <Typography
             sx={{

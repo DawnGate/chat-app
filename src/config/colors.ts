@@ -6,6 +6,11 @@ export const primaryColor = {
   hover: '#e9f2f6',
 };
 
+export const errorColor = {
+  main: '#EF6262',
+  dark: '#C51605',
+};
+
 export const textColor = {
   normal: '#3d3d3d',
   medium: '#666666',
