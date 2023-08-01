@@ -1,10 +1,14 @@
+'use client';
+
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import Stack from '@mui/material/Stack';
-
-import { badgeColor, textColor } from '@/config/colors';
 import Box from '@mui/material/Box';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import { alpha } from '@mui/material/styles';
+
+import { badgeColor, primaryColor, textColor } from '@/config/colors';
+
 import {
   captionTypo,
   inputTypo,
@@ -18,22 +22,36 @@ enum STATUS {
   READ,
 }
 
+function BadgeBox({ count, color = 'red' }: { count: number; color?: string }) {
+  return (
+    <Box
+      sx={{
+        background: color,
+        borderRadius: 999,
+        textAlign: 'center',
+        minWidth: 18,
+      }}
+    >
+      <Typography
+        sx={{
+          fontSize: captionTypo.medium,
+          color: 'white',
+        }}
+      >
+        {count}
+      </Typography>
+    </Box>
+  );
+}
+
 function StatusIcon({ status }: { status: STATUS }) {
   let content = null;
   switch (status) {
     case STATUS.MENTION:
-      content = (
-        <Badge
-          badgeContent={2}
-          color="primary"
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-        >
-          <Box>&nbsp;</Box>
-        </Badge>
-      );
+      content = <BadgeBox count={2} />;
+      break;
+    case STATUS.NEW_MESSAGE:
+      content = <BadgeBox count={3} color={textColor.light} />;
       break;
     default:
       break;
@@ -43,57 +61,74 @@ function StatusIcon({ status }: { status: STATUS }) {
 
 function UserItem() {
   return (
-    <Stack direction="row" spacing={1}>
-      <Box>
-        <Badge
-          overlap="circular"
-          variant="dot"
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          sx={{
-            '& > span': {
-              border: '1px solid white',
-              backgroundColor: badgeColor,
-            },
-          }}
-        >
-          <Avatar />
-        </Badge>
-      </Box>
-      <Box flex={1} overflow="hidden">
-        <Typography
-          sx={{
-            fontWeight: 600,
-            ...inputTypo,
-            ...threeDotTextOverflow,
-          }}
-        >
-          Arman Test Arman Test Arman Test Arman Test
-        </Typography>
-        <Typography
-          sx={{
-            color: textColor.lighter,
-            fontSize: captionTypo.medium,
-            ...threeDotTextOverflow,
-          }}
-        >
-          This is the latest message pArman Test Arman Test Arman Test
-        </Typography>
-      </Box>
-      <Box width={30}>
+    <Box
+      sx={{
+        ':hover': {
+          background: alpha(primaryColor.main, 0.08),
+          '&:before': {
+            content: '""',
+            width: '3px',
+            height: '100%',
+            background: primaryColor.dark,
+            position: 'absolute',
+          },
+        },
+        cursor: 'pointer',
+        position: 'relative',
+      }}
+    >
+      <Stack direction="row" spacing={1} py={1} px={2}>
         <Box>
-          <StatusIcon status={STATUS.MENTION} />
+          <Badge
+            overlap="circular"
+            variant="dot"
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            sx={{
+              '& > span': {
+                border: '1px solid white',
+                backgroundColor: badgeColor,
+              },
+            }}
+          >
+            <Avatar />
+          </Badge>
         </Box>
-        <Typography
-          sx={{
-            fontSize: captionTypo.small,
-            fontWeight: 500,
-            color: textColor.medium,
-          }}
-        >
-          10:30
-        </Typography>
-      </Box>
-    </Stack>
+        <Box flex={1} overflow="hidden">
+          <Typography
+            sx={{
+              fontWeight: 600,
+              ...inputTypo,
+              ...threeDotTextOverflow,
+            }}
+          >
+            Arman Test Arman Test Arman Test Arman Test
+          </Typography>
+          <Typography
+            sx={{
+              color: textColor.lighter,
+              fontSize: captionTypo.medium,
+              ...threeDotTextOverflow,
+            }}
+          >
+            This is the latest message pArman Test Arman Test Arman Test
+          </Typography>
+        </Box>
+        <Box width={30}>
+          <Box display="flex" justifyContent="center" mb={0.5}>
+            <StatusIcon status={STATUS.NEW_MESSAGE} />
+          </Box>
+          <Typography
+            sx={{
+              fontSize: captionTypo.small,
+              fontWeight: 500,
+              color: textColor.medium,
+            }}
+          >
+            10:30
+          </Typography>
+        </Box>
+      </Stack>
+    </Box>
   );
 }
 

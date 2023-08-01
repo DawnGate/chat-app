@@ -12,12 +12,13 @@ function ChatPage() {
     <Stack direction="row" height="100%">
       <Box
         className="LeftChat"
+        flexDirection="column"
         sx={{
           width: 300,
           background: '#FAFAFA',
           display: {
             xs: 'none',
-            md: 'block',
+            md: 'flex',
           },
           borderRight: 1,
           borderColor: dividerColor,

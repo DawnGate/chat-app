@@ -2,6 +2,7 @@ import { textColor } from '@/config/colors';
 import { Box } from 'react-feather';
 
 import ContentBox from './ContentBox';
+import UserItem from './UserItem';
 
 function GroupAndChannel() {
   return (
@@ -9,7 +10,8 @@ function GroupAndChannel() {
       title="group & channel"
       icon={<Box color={textColor.lighter} size={14} />}
     >
-      Hello
+      <UserItem />
+      <UserItem />
     </ContentBox>
   );
 }

@@ -15,9 +15,9 @@ function SearchTextField() {
       fullWidth
       sx={{
         background: 'white',
-        caretColor: primaryColor,
+        caretColor: primaryColor.main,
         '& fieldset': {
-          borderRadius: 2,
+          borderRadius: 3,
         },
         '& input': {
           paddingY: 1,

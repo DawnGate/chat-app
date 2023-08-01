@@ -15,7 +15,7 @@ function ContentBox({
 }) {
   return (
     <Box>
-      <Box display="flex" gap={1} alignItems="center">
+      <Box display="flex" gap={1} alignItems="center" mx={2}>
         {icon}
         <Typography
           variant="caption"
