@@ -4,8 +4,9 @@ import CDivider from '@/components/CDivider';
 import { dividerColor } from '@/config/colors';
 import LeftChatHeader from '@/components/LeftChat/Header';
 import LeftChat from '@/components/LeftChat';
+import RightChat from '@/components/RightChat';
 
-const HEADER_HEIGHT = 50;
+import { HEADER_HEIGHT } from '@/config/constant';
 
 function ChatPage() {
   return (
@@ -32,14 +33,14 @@ function ChatPage() {
       </Box>
       <Box
         className="RightChat"
+        display="flex"
+        flexDirection="column"
         sx={{
           background: '#FEFEFE',
           flex: 1,
         }}
       >
-        <Box height={HEADER_HEIGHT}>Header Right Chat</Box>
-        <CDivider />
-        Right Chat
+        <RightChat />
       </Box>
     </Stack>
   );

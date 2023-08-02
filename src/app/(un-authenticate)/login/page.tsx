@@ -64,7 +64,7 @@ function LoginPage() {
   // events
   const handleOnSubmit = (data: UserScheme) => {
     console.log('hey', data);
-    router.push('/app');
+    router.push('/chat');
   };
 
   // render
