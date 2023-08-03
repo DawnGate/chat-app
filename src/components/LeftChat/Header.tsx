@@ -8,7 +8,7 @@ function LeftChatHeader() {
     <Stack
       gap={1}
       px={2}
-      my={1}
+      pt={1}
       height="100%"
       direction="row"
       alignItems="center"

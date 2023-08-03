@@ -1,15 +1,11 @@
 import Box from '@mui/material/Box';
 
-import { HEADER_HEIGHT } from '@/config/constant';
-
 import RightChatHeader from './Header';
 
 function RightChat() {
   return (
     <>
-      <Box height={HEADER_HEIGHT}>
-        <RightChatHeader />
-      </Box>
+      <RightChatHeader />
       <Box
         sx={{
           flex: 1,

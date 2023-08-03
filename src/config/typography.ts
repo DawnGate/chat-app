@@ -1,3 +1,7 @@
+export const textTypo = {
+  normal: '16px',
+};
+
 export const inputTypo = {
   fontSize: '14px',
 };
