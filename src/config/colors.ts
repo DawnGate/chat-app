@@ -19,3 +19,5 @@ export const textColor = {
 };
 
 export const badgeColor = '#56cf8b';
+
+export const chatDefaultBackground = '#D8D9DA';
