@@ -1,5 +1,7 @@
+import RightChat from '@/components/RightChat';
+
 function ChatIdPage() {
-  return <p>Chat id page</p>;
+  return <RightChat />;
 }
 
 export default ChatIdPage;

@@ -1,3 +1,7 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
@@ -11,6 +15,9 @@ import { ArrowLeft, MoreVertical, Phone, Search } from 'react-feather';
 import { captionTypo, textTypo } from '@/config/typography';
 
 function RightChatHeader() {
+  // hooks
+  const router = useRouter();
+  // render
   return (
     <Box
       sx={{
@@ -27,6 +34,9 @@ function RightChatHeader() {
           display: {
             md: 'none',
           },
+        }}
+        onClick={() => {
+          router.push('/chat');
         }}
       >
         <ArrowLeft />
