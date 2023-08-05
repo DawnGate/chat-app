@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
@@ -21,16 +21,24 @@ import {
 import StatusIcon from './components/StatusIcon';
 import { MessageStatus } from './types/common';
 
-function UserItem() {
+function UserItem({ chatId }: { chatId: string }) {
   // hooks
+  const pathname = usePathname();
   const router = useRouter();
+
+  // local variable
+  const currentPath = `/chat/${chatId}`;
+  const isSameCurrentSelect = pathname === currentPath;
 
   // render
   return (
     <Box
       sx={{
         ':hover': {
-          background: alpha(primaryColor.main, 0.08),
+          background: alpha(
+            primaryColor.main,
+            isSameCurrentSelect ? 0.5 : 0.08,
+          ),
           '&:before': {
             content: '""',
             width: '3px',
@@ -39,11 +47,14 @@ function UserItem() {
             position: 'absolute',
           },
         },
+        ...(isSameCurrentSelect && {
+          background: alpha(primaryColor.main, 0.5),
+        }),
         cursor: 'pointer',
         position: 'relative',
       }}
       onClick={() => {
-        router.push('/chat/12345');
+        router.push(currentPath);
       }}
     >
       <Stack direction="row" spacing={1} py={1} px={2}>

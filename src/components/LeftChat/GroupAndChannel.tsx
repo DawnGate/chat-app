@@ -10,8 +10,8 @@ function GroupAndChannel() {
       title="group & channel"
       icon={<Box color={textColor.lighter} size={14} />}
     >
-      <UserItem />
-      <UserItem />
+      <UserItem chatId="123456" />
+      <UserItem chatId="1234567" />
     </ContentBox>
   );
 }
