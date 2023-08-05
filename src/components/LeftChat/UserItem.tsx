@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import Stack from '@mui/material/Stack';
@@ -7,15 +9,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
 
-import DoneAllIcon from '@mui/icons-material/DoneAll';
-import PhoneCallbackIcon from '@mui/icons-material/PhoneCallback';
-
-import {
-  badgeColor,
-  errorColor,
-  primaryColor,
-  textColor,
-} from '@/config/colors';
+import { badgeColor, primaryColor, textColor } from '@/config/colors';
 
 import {
   captionTypo,
@@ -23,77 +17,15 @@ import {
   threeDotTextOverflow,
 } from '@/config/typography';
 
-enum STATUS {
-  MENTION,
-  NEW_MESSAGE,
-  MISS_CALL,
-  READ,
-}
-
-function BadgeBox({
-  count,
-  color = errorColor.main,
-}: {
-  count: number;
-  color?: string;
-}) {
-  return (
-    <Box
-      sx={{
-        background: color,
-        borderRadius: 999,
-        textAlign: 'center',
-        minWidth: 18,
-      }}
-    >
-      <Typography
-        sx={{
-          fontSize: captionTypo.medium,
-          color: 'white',
-        }}
-      >
-        {count}
-      </Typography>
-    </Box>
-  );
-}
-
-function StatusIcon({ status }: { status: STATUS }) {
-  let content = null;
-  switch (status) {
-    case STATUS.MENTION:
-      content = <BadgeBox count={2} />;
-      break;
-    case STATUS.NEW_MESSAGE:
-      content = <BadgeBox count={3} color={textColor.light} />;
-      break;
-    case STATUS.READ:
-      content = (
-        <DoneAllIcon
-          sx={{
-            fontSize: '20px',
-            color: badgeColor,
-          }}
-        />
-      );
-      break;
-    case STATUS.MISS_CALL:
-      content = (
-        <PhoneCallbackIcon
-          sx={{
-            fontSize: '20px',
-            color: errorColor.main,
-          }}
-        />
-      );
-      break;
-    default:
-      break;
-  }
-  return content;
-}
+// child components
+import StatusIcon from './components/StatusIcon';
+import { MessageStatus } from './types/common';
 
 function UserItem() {
+  // hooks
+  const router = useRouter();
+
+  // render
   return (
     <Box
       sx={{
@@ -109,6 +41,9 @@ function UserItem() {
         },
         cursor: 'pointer',
         position: 'relative',
+      }}
+      onClick={() => {
+        router.push('/chat/12345');
       }}
     >
       <Stack direction="row" spacing={1} py={1} px={2}>
@@ -149,7 +84,7 @@ function UserItem() {
         </Box>
         <Box width={30}>
           <Box display="flex" justifyContent="center" mb={0.5}>
-            <StatusIcon status={STATUS.READ} />
+            <StatusIcon status={MessageStatus.READ} />
           </Box>
           <Typography
             sx={{

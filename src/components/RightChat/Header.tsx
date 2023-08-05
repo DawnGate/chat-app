@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
 // icons
-import { MoreVertical, Phone, Search } from 'react-feather';
+import { ArrowLeft, MoreVertical, Phone, Search } from 'react-feather';
 
 // styles
 import { captionTypo, textTypo } from '@/config/typography';
@@ -22,6 +22,15 @@ function RightChatHeader() {
       px={2}
       gap={1}
     >
+      <IconButton
+        sx={{
+          display: {
+            md: 'none',
+          },
+        }}
+      >
+        <ArrowLeft />
+      </IconButton>
       <Avatar />
       <Box flex={1}>
         <Typography sx={{ fontWeight: 600, fontSize: textTypo.normal }}>
