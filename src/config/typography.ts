@@ -1,5 +1,6 @@
 export const textTypo = {
   normal: '16px',
+  medium: '14px',
 };
 
 export const inputTypo = {
