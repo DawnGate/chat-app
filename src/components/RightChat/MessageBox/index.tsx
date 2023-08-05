@@ -1,11 +1,11 @@
-import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import { ReactNode } from 'react';
 
 function MessageBox({ children }: { children: ReactNode }) {
   return (
-    <Box className="c-message-box" sx={{}}>
+    <Stack className="c-message-box" gap={1} mb={2}>
       {children}
-    </Box>
+    </Stack>
   );
 }
 

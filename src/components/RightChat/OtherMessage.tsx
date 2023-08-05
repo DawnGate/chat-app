@@ -12,9 +12,7 @@ function OtherMessage() {
     <Box display="flex" gap={1} paddingRight={7}>
       <Avatar />
       <Box>
-        <Box display="flex" gap={1} alignItems="center">
-          <Typography fontWeight="medium">Jame Bone</Typography>
-        </Box>
+        <Typography fontWeight="medium">Jame Bone</Typography>
         <MessageBox>
           <MessageItem>
             <Typography sx={{ fontSize: textTypo.medium }}>Hey</Typography>

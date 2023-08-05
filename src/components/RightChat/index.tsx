@@ -5,6 +5,7 @@ import { chatDefaultBackground } from '@/config/colors';
 
 import RightChatHeader from './Header';
 import OtherMessage from './OtherMessage';
+import YourMessage from './YourMessage';
 
 function RightChat() {
   return (
@@ -15,14 +16,15 @@ function RightChat() {
           flex: 1,
           overflow: 'auto',
           background: chatDefaultBackground,
+          p: 2,
         }}
       >
-        <Box height={1000} p={2}>
-          <OtherMessage />
-          <OtherMessage />
-          <OtherMessage />
-          <OtherMessage />
-        </Box>
+        <OtherMessage />
+        <OtherMessage />
+        <OtherMessage />
+        <YourMessage />
+        <OtherMessage />
+        <YourMessage />
       </Box>
       <Box px={1} my={1}>
         <TextField
