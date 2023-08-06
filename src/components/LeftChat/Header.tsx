@@ -1,9 +1,13 @@
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
-import { ChevronRight } from 'react-feather';
+import { ChevronRight, Menu } from 'react-feather';
 
-function LeftChatHeader() {
+function LeftChatHeader({
+  handleDrawerToggle,
+}: {
+  handleDrawerToggle: () => void;
+}) {
   return (
     <Stack
       gap={1}
@@ -13,6 +17,17 @@ function LeftChatHeader() {
       direction="row"
       alignItems="center"
     >
+      <IconButton
+        sx={{
+          display: {
+            xs: 'block',
+            sm: 'none',
+          },
+        }}
+        onClick={handleDrawerToggle}
+      >
+        <Menu />
+      </IconButton>
       <Avatar />
       <Avatar />
       <Avatar />

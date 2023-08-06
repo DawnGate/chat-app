@@ -47,7 +47,7 @@ function AppLayout({ children }: { children: ReactNode }) {
             }}
           >
             <Box height={HEADER_HEIGHT}>
-              <LeftChatHeader />
+              <LeftChatHeader handleDrawerToggle={handleDrawerToggle} />
             </Box>
             <CDivider />
             <LeftChat />
