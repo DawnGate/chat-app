@@ -40,6 +40,7 @@ function DrawerContent() {
     <Box
       sx={{
         paddingY: 1,
+        width: 60,
       }}
     >
       <List

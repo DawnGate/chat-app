@@ -5,7 +5,7 @@ import Drawer from '@mui/material/Drawer';
 import DrawerContent from './DrawerContent';
 
 // constant
-const NAV_WIDTH = 60;
+const NAV_WIDTH = 66;
 
 function NavBar({
   handleDrawerToggle,
@@ -31,8 +31,10 @@ function NavBar({
         }}
         sx={{
           display: { xs: 'block', sm: 'none' },
-          '& .MuiDrawer-paper': { width: NAV_WIDTH },
           width: NAV_WIDTH,
+        }}
+        PaperProps={{
+          className: 'custom-scrollbar',
         }}
       >
         {drawer}
@@ -41,8 +43,10 @@ function NavBar({
         variant="permanent"
         sx={{
           display: { xs: 'none', sm: 'block' },
-          '& .MuiDrawer-paper': { width: NAV_WIDTH },
           width: NAV_WIDTH,
+        }}
+        PaperProps={{
+          className: 'custom-scrollbar',
         }}
         open
       >

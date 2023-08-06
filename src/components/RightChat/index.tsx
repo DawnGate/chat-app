@@ -18,6 +18,7 @@ function RightChat() {
           background: chatDefaultBackground,
           p: 2,
         }}
+        className="custom-scrollbar"
       >
         <OtherMessage />
         <OtherMessage />

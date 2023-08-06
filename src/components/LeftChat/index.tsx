@@ -46,6 +46,7 @@ function LeftChat() {
         display="flex"
         flexDirection="column"
         overflow="auto"
+        className="custom-scrollbar"
       >
         <PinChats />
         <GroupAndChannel />
