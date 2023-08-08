@@ -4,6 +4,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
+// firebase
+import { signInWithEmailAndPassword } from 'firebase/auth';
+
 // hooks
 import { useState } from 'react';
 
@@ -31,6 +34,7 @@ import z from 'zod';
 
 // hooks
 import { useRouter } from 'next/navigation';
+import { firebaseAuth } from '@/lib/firebase-config';
 
 const userScheme = z.object({
   email: z
@@ -53,6 +57,7 @@ function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<UserScheme>({
     resolver: zodResolver(userScheme),
   });
@@ -63,8 +68,30 @@ function LoginPage() {
 
   // events
   const handleOnSubmit = (data: UserScheme) => {
-    console.log('hey', data);
-    router.push('/chat');
+    signInWithEmailAndPassword(firebaseAuth, data.email, data.password)
+      .then((userCred) => {
+        if (!userCred) {
+          return;
+        }
+
+        userCred.user.getIdToken().then((userJwtToken) => {
+          fetch('/api/login', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${userJwtToken}`,
+            },
+          }).then((loginRes) => {
+            if (loginRes.status === 200) {
+              router.push('/chat');
+            }
+          });
+        });
+      })
+      .catch(() => {
+        // you can using catch error for testing
+        // I don't using message error because make me feel will lead security problem
+        setError('password', { message: 'email or password not correct' });
+      });
   };
 
   // render

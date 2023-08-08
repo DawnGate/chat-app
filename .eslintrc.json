@@ -8,7 +8,7 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended"
   ],
-  "plugins": ["@typescript-eslint", "react", "tss-unused-classes"],
+  "plugins": ["@typescript-eslint", "react", "tss-unused-classes", "import"],
   "parserOptions": {
     "ecmaVersion": 2021,
     "sourceType": "module",
@@ -24,7 +24,14 @@
     "react/jsx-props-no-spreading": ["warn"],
     "react/no-unescaped-entities": ["off"],
     "linebreak-style": ["off"],
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true,
+        "optionalDependencies": false,
+        "peerDependencies": false
+      }
+    ],
     "tss-unused-classes/unused-classes": "warn",
     "react/require-default-props": ["off"]
   },
