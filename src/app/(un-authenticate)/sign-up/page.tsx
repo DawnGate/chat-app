@@ -4,6 +4,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
+// firebase
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { firebaseAuth } from '@/lib/firebase-config';
+
 // react
 import { useState } from 'react';
 
@@ -28,6 +32,9 @@ import passwordShowIcon from '@/assets/icons/PasswordShow.svg';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
+
+// hooks
+import { useRouter } from 'next/navigation';
 
 const userScheme = z
   .object({
@@ -59,9 +66,11 @@ function SignUp() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<UserScheme>({
     resolver: zodResolver(userScheme),
   });
+  const router = useRouter();
   // local state
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
@@ -69,7 +78,32 @@ function SignUp() {
 
   // events
   const handleOnSubmit: SubmitHandler<UserScheme> = (data) => {
-    console.log('submit', data);
+    createUserWithEmailAndPassword(firebaseAuth, data.email, data.newPassword)
+      .then((userCredential) => {
+        if (!userCredential) {
+          return;
+        }
+
+        userCredential.user.getIdToken().then((userJwtToken) => {
+          fetch('/api/login', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${userJwtToken}`,
+            },
+          }).then((loginRes) => {
+            if (loginRes.status === 200) {
+              router.push('/chat');
+            }
+          });
+        });
+      })
+      .catch((error) => {
+        if (error.code === 'auth/email-already-in-use') {
+          setError('email', { message: 'email in use in another account' });
+        } else {
+          setError('email', { message: 'Some thing error has occur' });
+        }
+      });
   };
 
   // render
@@ -200,7 +234,7 @@ function SignUp() {
           type="submit"
         >
           <Typography variant="body1" fontWeight={600}>
-            Log in
+            Sign up now
           </Typography>
         </Button>
       </form>

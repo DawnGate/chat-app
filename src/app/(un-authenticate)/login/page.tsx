@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 // firebase
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { firebaseAuth } from '@/lib/firebase-config';
 
 // hooks
 import { useState } from 'react';
@@ -34,7 +35,6 @@ import z from 'zod';
 
 // hooks
 import { useRouter } from 'next/navigation';
-import { firebaseAuth } from '@/lib/firebase-config';
 
 const userScheme = z.object({
   email: z
