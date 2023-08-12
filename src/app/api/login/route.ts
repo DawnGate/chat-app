@@ -14,14 +14,15 @@ export async function POST(request: NextRequest, response: NextResponse) {
     const decodedToken = await auth().verifyIdToken(idToken);
 
     if (decodedToken) {
-      const expiresIn = 1000 * 60 * 60 * 24 * 5;
+      const expiresIn = 60 * 60 * 24 * 7 * 1000;
+      const expiresInSecond = Math.floor(expiresIn / 1000);
       const sessionCookie = await auth().createSessionCookie(idToken, {
         expiresIn,
       });
       const options = {
         name: 'session',
         value: sessionCookie,
-        expiresIn,
+        maxAge: expiresInSecond,
         httpOnly: true,
         secure: true,
       };

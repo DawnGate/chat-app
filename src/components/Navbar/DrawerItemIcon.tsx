@@ -16,11 +16,13 @@ function DrawerItemIcon({
   color = 'primary',
   selected = false,
   href,
+  handleClick,
 }: {
   children: ReactNode;
   color?: Color;
   selected?: boolean;
   href?: string;
+  handleClick?: () => void;
 }) {
   return (
     <ListItemButton
@@ -40,6 +42,11 @@ function DrawerItemIcon({
           },
         }),
       })}
+      onClick={() => {
+        if (handleClick) {
+          handleClick();
+        }
+      }}
     >
       <ListItemIcon sx={{ minWidth: 0 }}>{children}</ListItemIcon>
     </ListItemButton>

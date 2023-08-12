@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -18,6 +18,7 @@ import List from '@mui/material/List';
 
 import DrawerItemIcon from './DrawerItemIcon';
 import DrawerDivider from '../CDivider';
+import signOutUser from './utils/signOutUser';
 
 const chatRoutes = { chat: '/chat', chatSettings: '/chat/settings' };
 
@@ -26,6 +27,7 @@ function DrawerContent() {
   const chatRoutesPath = Object.values(chatRoutes);
   // hooks
   const pathname = usePathname();
+  const router = useRouter();
 
   // local variables
   let selectedRoute = chatRoutesPath[0];
@@ -74,7 +76,12 @@ function DrawerContent() {
         >
           <Settings />
         </DrawerItemIcon>
-        <DrawerItemIcon color="error">
+        <DrawerItemIcon
+          color="error"
+          handleClick={() => {
+            signOutUser(router);
+          }}
+        >
           <LogOut />
         </DrawerItemIcon>
       </List>
