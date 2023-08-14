@@ -86,11 +86,22 @@ function SignUp() {
         }
 
         // add new user to database
-        setDoc(doc(firebaseDb, 'users', userCredential.user.uid), {
-          email: data.email,
-          displayName: data.email.split('@')[0],
-          createdAt: serverTimestamp(),
-        })
+        const createNewUser = setDoc(
+          doc(firebaseDb, 'users', userCredential.user.uid),
+          {
+            email: data.email,
+            displayName: data.email.split('@')[0],
+            createdAt: serverTimestamp(),
+          },
+        );
+        const createNewUserChat = setDoc(
+          doc(firebaseDb, 'usersChat', userCredential.user.uid),
+          {
+            email: data.email,
+            chats: [],
+          },
+        );
+        Promise.all([createNewUser, createNewUserChat])
           .then(() => {
             userCredential.user.getIdToken().then((userJwtToken) => {
               fetch('/api/login', {

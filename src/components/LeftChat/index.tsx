@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import { Edit } from 'react-feather';
 
 // child components
-import SearchTextField from './TextField';
+import SearchUserBox from './SearchUserBox';
 import PinChats from './PinChats';
 import GroupAndChannel from './GroupAndChannel';
 import AllMessages from './AllMessages';
@@ -38,7 +38,7 @@ function LeftChat() {
             <Edit size={16} />
           </IconButton>
         </Stack>
-        <SearchTextField />
+        <SearchUserBox />
       </Box>
       <Box
         gap={2}
