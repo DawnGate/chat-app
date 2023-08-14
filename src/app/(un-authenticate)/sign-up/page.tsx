@@ -5,8 +5,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 // firebase
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { firebaseAuth } from '@/lib/firebase-config';
+import { firebaseAuth, firebaseDb } from '@/lib/firebase-config';
 
 // react
 import { useState } from 'react';
@@ -84,18 +85,28 @@ function SignUp() {
           return;
         }
 
-        userCredential.user.getIdToken().then((userJwtToken) => {
-          fetch('/api/login', {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${userJwtToken}`,
-            },
-          }).then((loginRes) => {
-            if (loginRes.status === 200) {
-              router.push('/chat');
-            }
+        // add new user to database
+        setDoc(doc(firebaseDb, 'users', userCredential.user.uid), {
+          email: data.email,
+          createdAt: serverTimestamp(),
+        })
+          .then(() => {
+            userCredential.user.getIdToken().then((userJwtToken) => {
+              fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                  Authorization: `Bearer ${userJwtToken}`,
+                },
+              }).then((loginRes) => {
+                if (loginRes.status === 200) {
+                  router.push('/chat');
+                }
+              });
+            });
+          })
+          .catch((err) => {
+            console.log('error', err);
           });
-        });
       })
       .catch((error) => {
         if (error.code === 'auth/email-already-in-use') {
@@ -155,8 +166,8 @@ function SignUp() {
                       priority
                       src={showPassword ? passwordHideIcon : passwordShowIcon}
                       alt="password-toggle-icon"
-                      width={24}
-                      height={24}
+                      width={20}
+                      height={20}
                     />
                   </IconButton>
                 </InputAdornment>
@@ -201,8 +212,8 @@ function SignUp() {
                           : passwordShowIcon
                       }
                       alt="confirm-password-toggle-icon"
-                      width={24}
-                      height={24}
+                      width={20}
+                      height={20}
                     />
                   </IconButton>
                 </InputAdornment>

@@ -87,10 +87,18 @@ function LoginPage() {
           });
         });
       })
-      .catch(() => {
-        // you can using catch error for testing
-        // I don't using message error because make me feel will lead security problem
-        setError('password', { message: 'email or password not correct' });
+      .catch((err) => {
+        const signInError: { [key: string]: string } = {
+          'auth/user-not-found':
+            'User not existed. Create a new account to continue',
+          'auth/wrong-password': 'Email or password not correct',
+          default: 'Some thing error has occur',
+        };
+        if (signInError[err.code]) {
+          setError('password', { message: signInError[err.code] });
+        } else {
+          setError('password', { message: signInError.default });
+        }
       });
   };
 
