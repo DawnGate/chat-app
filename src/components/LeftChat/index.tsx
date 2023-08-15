@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import { Edit } from 'react-feather';
 
 // child components
-import SearchUserBox from './SearchUserBox';
+import SearchUserBox from './SearchBox';
 import PinChats from './PinChats';
 import GroupAndChannel from './GroupAndChannel';
 import AllMessages from './AllMessages';
