@@ -1,10 +1,17 @@
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+
+import { firebaseAuth, firebaseDb } from '@/lib/firebase-config';
+
 import {
   createContext,
   ReactNode,
   useContext,
+  useEffect,
   useMemo,
   useReducer,
 } from 'react';
+
 import User from '@/models/User';
 import { ChatActionMap, ChatActionType } from './type/chatType';
 
@@ -40,26 +47,54 @@ const chatReducer = (state: IReducer, action: ChatActionMap) => {
 function ChatProvider({ children }: { children: ReactNode }) {
   const [value, dispatch] = useReducer(chatReducer, initValue);
 
+  const handleActions = {
+    updateUserInfo: (userInfo: User) => {
+      dispatch({
+        type: ChatActionType.UPDATE_USER_INFO,
+        payload: {
+          userInfo,
+        },
+      });
+    },
+    toggleMenuDrawer: (valueMenu: boolean) => {
+      dispatch({
+        type: ChatActionType.TOGGLE_MENU_DRAWER,
+        payload: {
+          menuDrawerValue: valueMenu,
+        },
+      });
+    },
+  };
+
+  // effects
+  useEffect(() => {
+    const unSubscribe = onAuthStateChanged(firebaseAuth, (user) => {
+      if (user) {
+        const { uid } = user;
+        const userRef = doc(firebaseDb, 'users', uid);
+        getDoc(userRef)
+          .then((docSnapshot) => {
+            const resData = docSnapshot.data();
+            handleActions.updateUserInfo({
+              id: uid,
+              email: resData?.email,
+              displayName: resData?.displayName,
+            });
+          })
+          .catch();
+      }
+    });
+
+    return () => {
+      unSubscribe();
+    };
+  }, []);
+
   const memoValue = useMemo(() => {
     return {
       userInfo: value.userInfo,
       showMenuDrawer: value.showMenuDrawer,
-      updateUserInfo: (userInfo: User) => {
-        dispatch({
-          type: ChatActionType.UPDATE_USER_INFO,
-          payload: {
-            userInfo,
-          },
-        });
-      },
-      toggleMenuDrawer: (valueMenu: boolean) => {
-        dispatch({
-          type: ChatActionType.TOGGLE_MENU_DRAWER,
-          payload: {
-            menuDrawerValue: valueMenu,
-          },
-        });
-      },
+      ...handleActions,
     };
   }, [value.userInfo, value.showMenuDrawer]);
 

@@ -1,6 +1,3 @@
-import { onAuthStateChanged } from 'firebase/auth';
-import { firebaseAuth } from '@/lib/firebase-config';
-
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -15,21 +12,7 @@ import PinChats from './PinChats';
 import GroupAndChannel from './GroupAndChannel';
 import AllMessages from './AllMessages';
 
-// get user information
-const getCurrentUserInformation = () => {
-  onAuthStateChanged(firebaseAuth, (user) => {
-    if (user) {
-      const { uid } = user;
-      console.log(uid);
-    } else {
-      console.log('not found');
-    }
-  });
-};
-
 function LeftChat() {
-  // init data
-  getCurrentUserInformation();
   // render
   return (
     <Box
