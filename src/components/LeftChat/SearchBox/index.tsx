@@ -124,7 +124,11 @@ function SearchUserBox() {
   const searchContent = searchUsers ? (
     <Stack spacing={0.5}>
       {searchUsers.map((user) => (
-        <SearchUserItem user={user} key={user.id} />
+        <SearchUserItem
+          key={user.id}
+          user={user}
+          handleCloseSearch={handleClearSearchText}
+        />
       ))}
     </Stack>
   ) : (

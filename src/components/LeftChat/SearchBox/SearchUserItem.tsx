@@ -19,7 +19,13 @@ import {
 } from '@/config/typography';
 import { borderRadius } from '@/config/border';
 
-function SearchUserItem({ user }: { user: User }) {
+function SearchUserItem({
+  user,
+  handleCloseSearch,
+}: {
+  user: User;
+  handleCloseSearch: () => void;
+}) {
   // hooks
   const router = useRouter();
   // render
@@ -38,6 +44,7 @@ function SearchUserItem({ user }: { user: User }) {
       }}
       onClick={() => {
         const currentPath = `/chat/${user.id}`;
+        handleCloseSearch();
         router.push(currentPath);
       }}
     >
