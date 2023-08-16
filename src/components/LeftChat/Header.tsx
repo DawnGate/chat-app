@@ -1,13 +1,15 @@
+'use client';
+
+import { useChatContext } from '@/context/chatContext';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import { ChevronRight, Menu } from 'react-feather';
 
-function LeftChatHeader({
-  handleDrawerToggle,
-}: {
-  handleDrawerToggle: () => void;
-}) {
+function LeftChatHeader() {
+  // hooks
+  const { toggleMenuDrawer } = useChatContext();
+  // render
   return (
     <Stack
       gap={1}
@@ -24,7 +26,9 @@ function LeftChatHeader({
             sm: 'none',
           },
         }}
-        onClick={handleDrawerToggle}
+        onClick={() => {
+          toggleMenuDrawer(true);
+        }}
       >
         <Menu />
       </IconButton>

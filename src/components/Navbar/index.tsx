@@ -1,5 +1,7 @@
 'use client';
 
+import { useChatContext } from '@/context/chatContext';
+
 import Drawer from '@mui/material/Drawer';
 
 import DrawerContent from './DrawerContent';
@@ -7,13 +9,11 @@ import DrawerContent from './DrawerContent';
 // constant
 const NAV_WIDTH = 66;
 
-function NavBar({
-  handleDrawerToggle,
-  mobileOpen,
-}: {
-  handleDrawerToggle: () => void;
-  mobileOpen: boolean;
-}) {
+function NavBar() {
+  // hooks
+  const { showMenuDrawer, toggleMenuDrawer } = useChatContext();
+
+  // local variables
   const container =
     typeof window !== 'undefined' ? () => window.document.body : undefined;
 
@@ -24,8 +24,10 @@ function NavBar({
       <Drawer
         container={container}
         variant="temporary"
-        open={mobileOpen}
-        onClose={handleDrawerToggle}
+        open={showMenuDrawer}
+        onClose={() => {
+          toggleMenuDrawer(false);
+        }}
         ModalProps={{
           keepMounted: true, // Better open performance on mobile.
         }}
