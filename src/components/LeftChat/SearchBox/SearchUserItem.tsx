@@ -1,5 +1,7 @@
 'use client';
 
+import { useChatContext } from '@/context/chatContext';
+
 import { useRouter } from 'next/navigation';
 
 import User from '@/models/User';
@@ -27,6 +29,7 @@ function SearchUserItem({
   handleCloseSearch: () => void;
 }) {
   // hooks
+  const { userInfo } = useChatContext();
   const router = useRouter();
   // render
   return (
@@ -43,9 +46,16 @@ function SearchUserItem({
         position: 'relative',
       }}
       onClick={() => {
-        const currentPath = `/chat/${user.id}`;
+        if (!userInfo?.id) {
+          return;
+        }
+        const chatId =
+          userInfo.id > user.id
+            ? `${user.id}_${userInfo.id}`
+            : `${userInfo.id}_${user.id}`;
+        const chatPath = `/chat/${chatId}`;
         handleCloseSearch();
-        router.push(currentPath);
+        router.push(chatPath);
       }}
     >
       <Stack direction="row" spacing={1} py={1} px={2}>

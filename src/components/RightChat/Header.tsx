@@ -1,6 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useChatContext } from '@/context/chatContext';
+import { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -13,10 +15,35 @@ import { ArrowLeft, MoreVertical, Phone, Search } from 'react-feather';
 
 // styles
 import { captionTypo, textTypo } from '@/config/typography';
+import { ChatInformation } from '@/models/Chat';
 
-function RightChatHeader() {
+// types
+import User from '@/models/User';
+
+function RightChatHeader({ chatInfo }: { chatInfo: ChatInformation | null }) {
   // hooks
   const router = useRouter();
+  const { userInfo } = useChatContext();
+
+  // state
+  const [otherUserInfo, setOtherUserInfo] = useState<User | null>(null);
+
+  // variables
+  const usersIdMap = chatInfo?.users?.map((user) => {
+    return user.id;
+  });
+
+  // effects
+  useEffect(() => {
+    if (!userInfo) return;
+    if (!usersIdMap?.includes(userInfo.id)) {
+      router.push('/404');
+    }
+    const otherUserId = usersIdMap?.find((id) => id !== userInfo.id);
+    const otherUser = chatInfo?.users?.find((user) => user.id === otherUserId);
+    setOtherUserInfo(otherUser ?? null);
+  }, [userInfo, usersIdMap, router]);
+
   // render
   return (
     <Box
@@ -44,10 +71,10 @@ function RightChatHeader() {
       <Avatar />
       <Box flex={1}>
         <Typography sx={{ fontWeight: 600, fontSize: textTypo.normal }}>
-          Ducica team
+          {otherUserInfo?.displayName}
         </Typography>
         <Typography sx={{ fontSize: captionTypo.medium }}>
-          Online 10 minute ago
+          {otherUserInfo?.email}
         </Typography>
       </Box>
       <Stack direction="row" spacing={1}>
