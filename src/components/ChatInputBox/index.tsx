@@ -10,15 +10,29 @@ import Box from '@mui/material/Box';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import IconButton from '@mui/material/IconButton';
 
+// config styles
 import { borderRadius } from '@/config/border';
 import { primaryColor, textColor, whiteDefaultColor } from '@/config/colors';
 import { textTypo } from '@/config/typography';
+import { useParams } from 'next/navigation';
 
 const MAX_CHAT_BOX_HEIGHT = 200;
 
+const sendTextMessage = (messageText: string, chatId: string) => {
+  const bodyData = {
+    messageText,
+    chatId,
+  };
+  fetch('/api/chat', {
+    method: 'POST',
+    body: JSON.stringify(bodyData),
+  });
+};
+
 function ChatInput() {
-  // store
-  const [sendTextMessage, setSendTextMessage] = useState<string>('');
+  // pathname
+  const params = useParams();
+  const { id: chatId } = params;
   // ref
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   // state
@@ -29,9 +43,9 @@ function ChatInput() {
   // event
   const handleSubmit = () => {
     if (!trimmedText) return;
-    if (sendTextMessage) {
-      setSendTextMessage(inputText);
-    }
+    // send message to server
+    sendTextMessage(trimmedText, chatId);
+    // reset input text
     setInputText('');
     if (textareaRef.current) {
       textareaRef.current.value = '';
@@ -110,7 +124,7 @@ function ChatInput() {
           position: 'absolute',
           right: 0,
           bottom: 0,
-          background: whiteDefaultColor,
+          background: 'transparent',
           outline: '1px solid',
           outlineOffset: '-1px',
           outlineColor: primaryColor.dark,

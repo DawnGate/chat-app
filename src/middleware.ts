@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(request: NextRequest, response: NextResponse) {
+  // log url
+  const { pathname } = request.nextUrl;
+  console.log(pathname);
   // init data
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -25,5 +28,5 @@ export async function middleware(request: NextRequest, response: NextResponse) {
 }
 
 export const config = {
-  matcher: ['/chat', '/chat/:chatId*'],
+  matcher: ['/chat', '/chat/:chatId*', '/api/chat'],
 };

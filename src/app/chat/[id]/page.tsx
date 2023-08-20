@@ -8,19 +8,10 @@ import { redirect } from 'next/navigation';
 
 const getCheckUser = async (chatId: string) => {
   try {
-    const docRef = doc(firebaseDb, 'messages', chatId);
-    const docSnap = await getDoc(docRef);
-    // check if this chatId in chats
-    if (docSnap.exists()) {
-      // TODO get information chat when it exist
-      console.log(docSnap);
-      return null;
-    }
     // check if chatId is valid from p2p chat
     if (!chatId.includes('_')) {
       return null;
     }
-
     const [firstUserId, secondUserId] = chatId.split('_');
     const firstUserRef = doc(firebaseDb, 'users', firstUserId);
     const secondUserRef = doc(firebaseDb, 'users', secondUserId);
@@ -31,6 +22,15 @@ const getCheckUser = async (chatId: string) => {
     ]);
 
     if (!(firstUserSnapshot.exists && secondUserSnapshot.exists)) {
+      return null;
+    }
+
+    const docRef = doc(firebaseDb, 'chats', chatId);
+    const docSnap = await getDoc(docRef);
+    // check if this chatId in chats
+    if (docSnap.exists()) {
+      // TODO get information chat when it exist
+      console.log(docSnap);
       return null;
     }
 
