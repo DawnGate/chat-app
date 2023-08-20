@@ -4,6 +4,7 @@ import { firebaseDb } from '@/lib/firebase-config';
 import RightChat from '@/components/RightChat';
 import { ChatInformation } from '@/models/Chat';
 import User from '@/models/User';
+import { redirect } from 'next/navigation';
 
 const getCheckUser = async (chatId: string) => {
   try {
@@ -52,7 +53,11 @@ const getCheckUser = async (chatId: string) => {
 
 async function ChatIdPage({ params }: { params: { id: string } }) {
   const chatInfo: ChatInformation | null = await getCheckUser(params.id);
-  return <RightChat chatInfo={chatInfo} />;
+
+  if (!chatInfo) {
+    redirect('/404');
+  }
+  return <RightChat chatInfoString={JSON.stringify(chatInfo)} />;
 }
 
 export default ChatIdPage;

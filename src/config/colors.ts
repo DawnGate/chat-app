@@ -15,9 +15,11 @@ export const textColor = {
   normal: '#3d3d3d',
   medium: '#666666',
   lighter: '#8f8f8f',
-  light: '#ccc',
+  light: '#cccccc',
 };
 
 export const badgeColor = '#56cf8b';
 
 export const chatDefaultBackground = '#D8D9DA';
+
+export const whiteDefaultColor = '#ffffff';

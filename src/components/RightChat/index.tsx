@@ -8,8 +8,10 @@ import { chatDefaultBackground } from '@/config/colors';
 import RightChatHeader from './Header';
 import OtherMessage from './OtherMessage';
 import YourMessage from './YourMessage';
+import CRMNewMessage from '../CRNMessage';
 
-function RightChat({ chatInfo }: { chatInfo: ChatInformation | null }) {
+function RightChat({ chatInfoString }: { chatInfoString: string }) {
+  const chatInfo = JSON.parse(chatInfoString) as ChatInformation;
   return (
     <>
       <RightChatHeader chatInfo={chatInfo} />
@@ -23,7 +25,7 @@ function RightChat({ chatInfo }: { chatInfo: ChatInformation | null }) {
         className="custom-scrollbar"
       >
         {/* // TODO create new chat message */}
-        {chatInfo?.chat?.messages && (
+        {chatInfo.chat?.messages ? (
           <>
             <OtherMessage />
             <OtherMessage />
@@ -32,6 +34,8 @@ function RightChat({ chatInfo }: { chatInfo: ChatInformation | null }) {
             <OtherMessage />
             <YourMessage />
           </>
+        ) : (
+          <CRMNewMessage />
         )}
       </Box>
       <Box px={1} my={1}>
