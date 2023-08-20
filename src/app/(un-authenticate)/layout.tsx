@@ -46,7 +46,7 @@ function LoginLayout({ children }: { children: ReactNode }) {
             justifyContent="end"
             height="100%"
           >
-            <Image src="/chat.svg" width={40} height={40} alt="Logo" />
+            <Image priority src="/chat.svg" width={40} height={40} alt="Logo" />
             <Typography variant="h6" fontWeight="bold" color="dark">
               Chatbox
             </Typography>

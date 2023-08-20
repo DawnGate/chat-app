@@ -50,7 +50,13 @@ function DrawerContent() {
         subheader={
           <Box display="flex" justifyContent="center" mb={2}>
             <Link href="/">
-              <Image src="/chat.svg" width={40} height={40} alt="Logo" />
+              <Image
+                priority
+                src="/chat.svg"
+                width={40}
+                height={40}
+                alt="Logo"
+              />
             </Link>
           </Box>
         }

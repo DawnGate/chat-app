@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
 
+import { borderRadius } from '@/config/border';
 import { badgeColor, primaryColor, textColor } from '@/config/colors';
 
 import {
@@ -35,10 +36,7 @@ function UserItem({ chatId }: { chatId: string }) {
     <Box
       sx={{
         ':hover': {
-          background: alpha(
-            primaryColor.main,
-            isSameCurrentSelect ? 0.5 : 0.08,
-          ),
+          background: alpha(primaryColor.main, isSameCurrentSelect ? 0.5 : 0.2),
           '&:before': {
             content: '""',
             width: '3px',
@@ -52,6 +50,8 @@ function UserItem({ chatId }: { chatId: string }) {
         }),
         cursor: 'pointer',
         position: 'relative',
+        borderTopRightRadius: borderRadius.dBig,
+        borderBottomRightRadius: borderRadius.dBig,
       }}
       onClick={() => {
         router.push(currentPath);
