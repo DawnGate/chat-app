@@ -1,8 +1,11 @@
-import { primaryColor } from '@/config/colors';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import { primaryColor } from '@/config/colors';
+import { borderRadius } from '@/config/border';
+
 function Spinner() {
+  // TODO change it to lottie file loading animation
   return (
     <Box
       sx={{
@@ -12,6 +15,7 @@ function Spinner() {
         justifyContent: 'center',
         alignItems: 'center',
         background: primaryColor.hover,
+        borderRadius: borderRadius.big,
       }}
     >
       <CircularProgress />

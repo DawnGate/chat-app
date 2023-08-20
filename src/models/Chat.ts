@@ -6,8 +6,9 @@ import User from './User';
 export type TimestampClientAdmin = Omit<Timestamp, 'toJSON'>;
 
 export interface ChatMessage {
+  id: string;
   content: string;
-  sentUserId: string;
+  senderId: string;
   timeSent: TimestampClientAdmin;
 }
 
@@ -17,14 +18,11 @@ export interface ChatRaw {
     content: string;
     timeSent: TimestampClientAdmin;
   };
-  messages: {
-    [key: string]: ChatMessage;
-  };
 }
 
 export interface ChatInformation {
   id: string;
   users: User[];
   // exist when have data chat
-  chat?: ChatRaw;
+  chat: ChatRaw | null;
 }

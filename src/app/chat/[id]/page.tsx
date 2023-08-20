@@ -2,7 +2,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { firebaseDb } from '@/lib/firebase-config';
 
 import RightChat from '@/components/RightChat';
-import { ChatInformation } from '@/models/Chat';
+import { ChatInformation, ChatRaw } from '@/models/Chat';
 import User from '@/models/User';
 import { redirect } from 'next/navigation';
 
@@ -27,11 +27,12 @@ const getCheckUser = async (chatId: string) => {
 
     const docRef = doc(firebaseDb, 'chats', chatId);
     const docSnap = await getDoc(docRef);
+
+    let chat: ChatRaw | null = null;
+
     // check if this chatId in chats
     if (docSnap.exists()) {
-      // TODO get information chat when it exist
-      console.log(docSnap);
-      return null;
+      chat = docSnap.data() as ChatRaw | null;
     }
 
     // create newChat information
@@ -41,6 +42,7 @@ const getCheckUser = async (chatId: string) => {
         { id: firstUserSnapshot.id, ...firstUserSnapshot.data() } as User,
         { id: secondUserSnapshot.id, ...secondUserSnapshot.data() } as User,
       ],
+      chat,
     };
 
     return newChat;

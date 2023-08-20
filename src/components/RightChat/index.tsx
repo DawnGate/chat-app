@@ -5,26 +5,13 @@ import { ChatInformation } from '@/models/Chat';
 import { chatDefaultBackground } from '@/config/colors';
 
 import RightChatHeader from './Header';
-import OtherMessage from './OtherMessage';
-import YourMessage from './YourMessage';
-import CRMNewMessage from '../CRNMessage';
+
 import ChatInput from '../ChatInputBox';
+import MessageContent from './MessageContent';
 
 function RightChat({ chatInfoString }: { chatInfoString: string }) {
+  // local variables
   const chatInfo = JSON.parse(chatInfoString) as ChatInformation;
-
-  const chatContent = chatInfo.chat?.messages ? (
-    <>
-      <OtherMessage />
-      <OtherMessage />
-      <OtherMessage />
-      <YourMessage />
-      <OtherMessage />
-      <YourMessage />
-    </>
-  ) : (
-    <CRMNewMessage />
-  );
 
   return (
     <>
@@ -38,7 +25,7 @@ function RightChat({ chatInfoString }: { chatInfoString: string }) {
         }}
         className="custom-scrollbar"
       >
-        {chatContent}
+        <MessageContent chatInfo={chatInfo} />
       </Box>
       <Box px={1} my={1}>
         <ChatInput />
