@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 
 import { ChatInformation } from '@/models/Chat';
 
@@ -9,9 +8,24 @@ import RightChatHeader from './Header';
 import OtherMessage from './OtherMessage';
 import YourMessage from './YourMessage';
 import CRMNewMessage from '../CRNMessage';
+import ChatInput from '../ChatInputBox';
 
 function RightChat({ chatInfoString }: { chatInfoString: string }) {
   const chatInfo = JSON.parse(chatInfoString) as ChatInformation;
+
+  const chatContent = chatInfo.chat?.messages ? (
+    <>
+      <OtherMessage />
+      <OtherMessage />
+      <OtherMessage />
+      <YourMessage />
+      <OtherMessage />
+      <YourMessage />
+    </>
+  ) : (
+    <CRMNewMessage />
+  );
+
   return (
     <>
       <RightChatHeader chatInfo={chatInfo} />
@@ -24,30 +38,10 @@ function RightChat({ chatInfoString }: { chatInfoString: string }) {
         }}
         className="custom-scrollbar"
       >
-        {/* // TODO create new chat message */}
-        {chatInfo.chat?.messages ? (
-          <>
-            <OtherMessage />
-            <OtherMessage />
-            <OtherMessage />
-            <YourMessage />
-            <OtherMessage />
-            <YourMessage />
-          </>
-        ) : (
-          <CRMNewMessage />
-        )}
+        {chatContent}
       </Box>
       <Box px={1} my={1}>
-        <TextField
-          fullWidth
-          sx={{
-            height: '100%',
-            '& input': {
-              padding: 1,
-            },
-          }}
-        />
+        <ChatInput />
       </Box>
     </>
   );
