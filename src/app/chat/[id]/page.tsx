@@ -38,10 +38,10 @@ const getCheckUser = async (chatId: string) => {
     // create newChat information
     const newChat: ChatInformation = {
       id: chatId,
-      users: [
-        { id: firstUserSnapshot.id, ...firstUserSnapshot.data() } as User,
-        { id: secondUserSnapshot.id, ...secondUserSnapshot.data() } as User,
-      ],
+      users: {
+        [firstUserSnapshot.id]: firstUserSnapshot.data() as User,
+        [secondUserSnapshot.id]: secondUserSnapshot.data() as User,
+      },
       chat,
     };
 

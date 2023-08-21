@@ -46,13 +46,13 @@ function SearchUserItem({
         position: 'relative',
       }}
       onClick={() => {
-        if (!userInfo?.id) {
+        if (!userInfo?.userId) {
           return;
         }
         const chatId =
-          userInfo.id > user.id
-            ? `${user.id}_${userInfo.id}`
-            : `${userInfo.id}_${user.id}`;
+          userInfo.userId > user.userId
+            ? `${user.userId}_${userInfo.userId}`
+            : `${userInfo.userId}_${user.userId}`;
         const chatPath = `/chat/${chatId}`;
         handleCloseSearch();
         router.push(chatPath);

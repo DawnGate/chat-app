@@ -1,5 +1,7 @@
 'use client';
 
+import { useChatContext } from '@/context/chatContext';
+
 import {
   and,
   collection,
@@ -32,6 +34,8 @@ import { inputTypo } from '@/config/typography';
 import SearchUserItem from './SearchUserItem';
 
 function SearchUserBox() {
+  // hooks
+  const { userInfo } = useChatContext();
   // states
   const [searchText, setSearchText] = useState<string>('');
   const debounceSearchText = useDebounce(searchText, 500);
@@ -108,12 +112,10 @@ function SearchUserBox() {
       getDocs(querySearchUser).then((querySnapshot) => {
         const users: User[] = [];
         querySnapshot.forEach((doc) => {
-          const userData = doc.data();
-          users.push({
-            id: doc.id,
-            displayName: String(userData.displayName),
-            email: String(userData.email),
-          });
+          const userData = doc.data() as User;
+          if (userData.userId !== userInfo?.userId) {
+            users.push(userData);
+          }
         });
         setSearchUsers(users);
       });
@@ -125,7 +127,7 @@ function SearchUserBox() {
     <Stack spacing={0.5}>
       {searchUsers.map((user) => (
         <SearchUserItem
-          key={user.id}
+          key={user.userId}
           user={user}
           handleCloseSearch={handleClearSearchText}
         />

@@ -1,7 +1,10 @@
+import { TimestampClientAdmin } from './Timestamp';
+
 interface User {
   displayName: string;
   email: string;
-  id: string;
+  userId: string;
+  createdAt: TimestampClientAdmin;
   // TODO add field photo for user
 }
 

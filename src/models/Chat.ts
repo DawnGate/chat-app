@@ -1,9 +1,5 @@
-import { Timestamp } from 'firebase/firestore';
-
+import { TimestampClientAdmin } from './Timestamp';
 import User from './User';
-
-// because time stamp type of admin sdk different with client
-export type TimestampClientAdmin = Omit<Timestamp, 'toJSON'>;
 
 export interface ChatMessage {
   id: string;
@@ -22,7 +18,7 @@ export interface ChatRaw {
 
 export interface ChatInformation {
   id: string;
-  users: User[];
+  users: { [key: string]: User };
   // exist when have data chat
   chat: ChatRaw | null;
 }

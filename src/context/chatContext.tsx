@@ -75,11 +75,7 @@ function ChatProvider({ children }: { children: ReactNode }) {
         getDoc(userRef)
           .then((docSnapshot) => {
             const resData = docSnapshot.data();
-            handleActions.updateUserInfo({
-              id: uid,
-              email: resData?.email,
-              displayName: resData?.displayName,
-            });
+            handleActions.updateUserInfo(resData as User);
           })
           .catch();
       }

@@ -92,6 +92,7 @@ function SignUp() {
             email: data.email,
             displayName: data.email.split('@')[0],
             createdAt: serverTimestamp(),
+            userId: userCredential.user.uid,
           },
         );
         const createNewUserChat = setDoc(

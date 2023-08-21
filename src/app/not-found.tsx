@@ -1,3 +1,5 @@
+'use client';
+
 import { IconButton } from '@mui/material';
 import Box from '@mui/material/Box';
 import { blue } from '@mui/material/colors';

@@ -29,20 +29,19 @@ function RightChatHeader({ chatInfo }: { chatInfo: ChatInformation | null }) {
   const [otherUserInfo, setOtherUserInfo] = useState<User | null>(null);
 
   // variables
-  const usersIdMap = chatInfo?.users?.map((user) => {
-    return user.id;
-  });
+  const usersIdMap = Object.keys(chatInfo?.users ?? {});
 
   // effects
   useEffect(() => {
     if (!userInfo) return;
-    if (!usersIdMap?.includes(userInfo.id)) {
+    if (!usersIdMap?.includes(userInfo.userId)) {
       router.push('/404');
     }
-    const otherUserId = usersIdMap?.find((id) => id !== userInfo.id);
-    const otherUser = chatInfo?.users?.find((user) => user.id === otherUserId);
+    const otherUserId = usersIdMap?.find((id) => id !== userInfo.userId);
+
+    const otherUser = chatInfo?.users?.[otherUserId as string];
     setOtherUserInfo(otherUser ?? null);
-  }, [userInfo, usersIdMap, router]);
+  }, [userInfo, router, usersIdMap]);
 
   // render
   return (

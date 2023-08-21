@@ -11,8 +11,7 @@ import { ChatInformation, ChatMessage } from '@/models/Chat';
 import Spinner from '@/components/Spinner';
 import CRMNewMessage from '@/components/CRNMessage';
 
-import OtherMessage from '../MessageBox/OtherMessage';
-import YourMessage from '../MessageBox/YourMessage';
+import MessageUserInfo from '../MessageBox/MessageUserInfo';
 
 function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
   // hooks
@@ -20,14 +19,15 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
 
   // local states
   const [messages, setMessages] = useState<ChatMessage[] | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoadingMessages, setIsLoadingMessages] = useState<boolean>(true);
 
   // local variables
-  const isNotHaveAnyMessage = !isLoading && !messages;
+  const isLoading = isLoadingMessages;
+  const isNotHaveAnyMessage = !isLoadingMessages && !messages;
 
   // effects
   useEffect(() => {
-    setIsLoading(true);
+    setIsLoadingMessages(true);
     const queryMessages = query(
       collection(firebaseDb, 'chats', chatInfo.id, 'messages'),
       orderBy('timeSent'),
@@ -48,11 +48,11 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
         } else {
           setMessages(null);
         }
-        setIsLoading(false);
+        setIsLoadingMessages(false);
       },
       (err) => {
         console.log(err);
-        setIsLoading(false);
+        setIsLoadingMessages(false);
       },
     );
     return () => {
@@ -69,15 +69,11 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
     return <CRMNewMessage />;
   }
 
-  // TODO render message box when have messages
   // TODO pagination with messages data
-  // TODO rewrite your message and other message
 
   const chatContent = messages?.map((item) => {
-    if (item.senderId === userInfo?.id) {
-      return <YourMessage key={item.id} />;
-    }
-    return <OtherMessage key={item.id} />;
+    const isYou = item.senderId === userInfo?.userId;
+    return <MessageUserInfo userInfo={userInfo} key={item.id} isYou={isYou} />;
   });
 
   return chatContent;
