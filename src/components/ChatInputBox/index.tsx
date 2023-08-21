@@ -34,7 +34,7 @@ function ChatInput() {
   const params = useParams();
   const { id: chatId } = params;
   // ref
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   // state
   const [inputText, setInputText] = useState<string>('');
   // local variable
@@ -95,7 +95,12 @@ function ChatInput() {
       }}
     >
       <TextareaAutosize
-        ref={textareaRef}
+        ref={(ref: HTMLTextAreaElement) => {
+          if (ref) {
+            textareaRef.current = ref;
+            ref.focus();
+          }
+        }}
         value={inputText}
         placeholder="Enter message"
         className="custom-scrollbar"

@@ -11,8 +11,8 @@ import { ChatInformation, ChatMessage } from '@/models/Chat';
 import Spinner from '@/components/Spinner';
 import CRMNewMessage from '@/components/CRNMessage';
 
-import OtherMessage from '../OtherMessage';
-import YourMessage from '../YourMessage';
+import OtherMessage from '../MessageBox/OtherMessage';
+import YourMessage from '../MessageBox/YourMessage';
 
 function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
   // hooks
@@ -69,18 +69,10 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
     return <CRMNewMessage />;
   }
 
-  //   const chatContent = (
-  //     <>
-  //       <OtherMessage />
-  //       <OtherMessage />
-  //       <OtherMessage />
-  //       <YourMessage />
-  //       <OtherMessage />
-  //       <YourMessage />
-  //     </>
-  //   );
-
   // TODO render message box when have messages
+  // TODO pagination with messages data
+  // TODO rewrite your message and other message
+
   const chatContent = messages?.map((item) => {
     if (item.senderId === userInfo?.id) {
       return <YourMessage key={item.id} />;
