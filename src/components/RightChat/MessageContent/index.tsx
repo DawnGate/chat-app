@@ -12,6 +12,7 @@ import Spinner from '@/components/Spinner';
 import CRMNewMessage from '@/components/CRNMessage';
 
 import MessageUserInfo from '../MessageBox/MessageUserInfo';
+import MessageItem from '../MessageBox/MessageItem';
 
 function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
   // hooks
@@ -71,9 +72,26 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
 
   // TODO pagination with messages data
 
+  let latestMessageUserId: string | null = null;
   const chatContent = messages?.map((item) => {
     const isYou = item.senderId === userInfo?.userId;
-    return <MessageUserInfo userInfo={userInfo} key={item.id} isYou={isYou} />;
+    let subContent = null;
+    if (latestMessageUserId !== item.senderId) {
+      latestMessageUserId = item.senderId;
+      subContent = (
+        <MessageUserInfo
+          userInfo={chatInfo.users[item.senderId]}
+          key={item.id}
+          isYou={isYou}
+        />
+      );
+    }
+    return (
+      <>
+        {subContent}
+        <MessageItem isYour={isYou} item={item} />
+      </>
+    );
   });
 
   return chatContent;

@@ -1,47 +1,73 @@
-import { ReactNode } from 'react';
-
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { captionTypo } from '@/config/typography';
+import { captionTypo, textTypo } from '@/config/typography';
 import { textColor } from '@/config/colors';
+import { timeOptionHourMinute } from '@/config/time';
+
+import { ChatMessage } from '@/models/Chat';
 
 function MessageItem({
-  children,
+  item,
   isYour = false,
 }: {
-  children: ReactNode;
+  item: ChatMessage;
   isYour?: boolean;
 }) {
-  return (
-    <Box
-      className="c-message-item"
+  // local variables
+  const textContent = (
+    <Typography
       sx={{
-        padding: 1,
-        paddingRight: 2,
-        borderRadius: 4,
-        background: 'white',
-        width: 'fit-content',
-        ...(isYour
-          ? {
-              alignSelf: 'flex-end',
-              borderBottomRightRadius: 8,
-              borderTopRightRadius: 0,
-            }
-          : {
-              borderBottomLeftRadius: 8,
-              borderTopLeftRadius: 0,
-            }),
+        fontSize: textTypo.medium,
       }}
     >
-      {children}
-      <Box minWidth={80} display="flex" justifyContent="flex-end">
-        <Typography
-          fontWeight="light"
-          sx={{ fontSize: captionTypo.small, color: textColor.lighter }}
-        >
-          09:11
-        </Typography>
+      {item.content}
+    </Typography>
+  );
+
+  const timeSent = item.timeSent.toDate();
+  const timeSentText = new Intl.DateTimeFormat(
+    'en-US',
+    timeOptionHourMinute,
+  ).format(timeSent);
+
+  // render
+  return (
+    <Box
+      display="flex"
+      justifyContent={isYour ? 'flex-end' : 'flex-start'}
+      paddingLeft={isYour ? 0 : 4}
+      paddingRight={isYour ? 4 : 0}
+      my={0.5}
+    >
+      <Box
+        sx={{
+          padding: 1,
+          paddingX: 1.5,
+          borderRadius: 4,
+          background: 'white',
+          width: 'fit-content',
+          ...(isYour
+            ? {
+                alignSelf: 'flex-end',
+                borderBottomRightRadius: 8,
+                borderTopRightRadius: 0,
+              }
+            : {
+                borderBottomLeftRadius: 8,
+                borderTopLeftRadius: 0,
+              }),
+        }}
+      >
+        {textContent}
+        <Box minWidth={80} display="flex" justifyContent="flex-end">
+          <Typography
+            fontWeight="light"
+            sx={{ fontSize: captionTypo.small, color: textColor.lighter }}
+          >
+            {timeSentText}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

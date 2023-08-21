@@ -14,9 +14,9 @@ function MessageUserInfo({
   return (
     <Box
       display="flex"
+      alignItems="center"
       flexDirection={isYou ? 'row-reverse' : 'row'}
       gap={1}
-      paddingRight={7}
     >
       <Avatar
         sx={{
