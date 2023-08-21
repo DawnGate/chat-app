@@ -5,7 +5,7 @@ interface User {
   email: string;
   userId: string;
   createdAt: TimestampClientAdmin;
-  // TODO add field photo for user
+  photoURL?: string;
 }
 
 export default User;

@@ -3,7 +3,7 @@
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { firebaseDb } from '@/lib/firebase-config';
 
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useChatContext } from '@/context/chatContext';
 
 import { ChatInformation, ChatMessage } from '@/models/Chat';
@@ -81,16 +81,15 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
       subContent = (
         <MessageUserInfo
           userInfo={chatInfo.users[item.senderId]}
-          key={item.id}
           isYou={isYou}
         />
       );
     }
     return (
-      <>
+      <Fragment key={item.id}>
         {subContent}
         <MessageItem isYour={isYou} item={item} />
-      </>
+      </Fragment>
     );
   });
 

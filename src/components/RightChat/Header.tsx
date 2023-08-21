@@ -67,7 +67,7 @@ function RightChatHeader({ chatInfo }: { chatInfo: ChatInformation | null }) {
       >
         <ArrowLeft />
       </IconButton>
-      <Avatar />
+      <Avatar src={otherUserInfo?.photoURL} />
       <Box flex={1}>
         <Typography sx={{ fontWeight: 600, fontSize: textTypo.normal }}>
           {otherUserInfo?.displayName}

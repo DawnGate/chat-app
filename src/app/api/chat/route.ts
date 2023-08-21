@@ -78,7 +78,13 @@ export async function POST(request: NextRequest, response: NextResponse) {
       timeSent: currentTime,
     });
 
-    // TODO add this chatId into list chats of 2 user in chat users
+    // add new chat to userChats of both 2 users
+    [firstUserId, secondUserId].forEach((userId) => {
+      const userChatPerUserRef = db.collection('userChat').doc(userId);
+      userChatPerUserRef.update({
+        chats: firestore.FieldValue.arrayUnion(chatId),
+      });
+    });
 
     await Promise.all([updateLatestMessage, addNewMessage]);
 

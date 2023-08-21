@@ -13,6 +13,7 @@ import GroupAndChannel from './GroupAndChannel';
 import AllMessages from './AllMessages';
 
 function LeftChat() {
+  // TODO update layout of left chat, some element not need
   // render
   return (
     <Box

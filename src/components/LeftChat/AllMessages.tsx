@@ -2,6 +2,7 @@ import ContentBox from './ContentBox';
 import UserItem from './UserItem';
 
 function AllMessages() {
+  // TODO display history message
   return (
     <ContentBox title="all message">
       <UserItem chatId="12345670" />
