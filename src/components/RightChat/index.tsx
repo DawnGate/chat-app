@@ -22,8 +22,11 @@ function RightChat({ chatInfoString }: { chatInfoString: string }) {
           overflow: 'auto',
           background: chatDefaultBackground,
           p: 2,
+          display: 'flex',
+          flexDirection: 'column-reverse',
         }}
         className="custom-scrollbar"
+        id="scrollableDiv"
       >
         <MessageContent chatInfo={chatInfo} />
       </Box>

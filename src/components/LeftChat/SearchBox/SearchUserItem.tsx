@@ -59,7 +59,7 @@ function SearchUserItem({
       }}
     >
       <Stack direction="row" spacing={1} py={1} px={2}>
-        <Avatar />
+        <Avatar alt={user.displayName} src={user.photoURL} />
         <Box flex={1} overflow="hidden">
           <Typography
             sx={{

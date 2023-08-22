@@ -1,7 +1,21 @@
 'use client';
 
-import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import {
+  DocumentData,
+  QueryDocumentSnapshot,
+  collection,
+  endBefore,
+  getDocs,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  startAfter,
+  startAt,
+} from 'firebase/firestore';
 import { firebaseDb } from '@/lib/firebase-config';
+
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { Fragment, useEffect, useState } from 'react';
 import { useChatContext } from '@/context/chatContext';
@@ -11,8 +25,14 @@ import { ChatInformation, ChatMessage } from '@/models/Chat';
 import Spinner from '@/components/Spinner';
 import CRMNewMessage from '@/components/CRNMessage';
 
+import { Typography } from '@mui/material';
+import { textTypo } from '@/config/typography';
+import { textColor } from '@/config/colors';
+
 import MessageUserInfo from '../MessageBox/MessageUserInfo';
 import MessageItem from '../MessageBox/MessageItem';
+
+const paginationLimit = 20;
 
 function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
   // hooks
@@ -21,17 +41,63 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
   // local states
   const [messages, setMessages] = useState<ChatMessage[] | null>(null);
   const [isLoadingMessages, setIsLoadingMessages] = useState<boolean>(true);
+  const [latestMessage, setLatestMessage] = useState<QueryDocumentSnapshot<
+    DocumentData,
+    DocumentData
+  > | null>(null);
+  const [hasNext, setHasNext] = useState<boolean>(false);
 
   // local variables
   const isLoading = isLoadingMessages;
   const isNotHaveAnyMessage = !isLoadingMessages && !messages;
+
+  // events
+  const fetchNextMessages = () => {
+    const queryNextMessages = query(
+      collection(firebaseDb, 'chats', chatInfo.id, 'messages'),
+      orderBy('timeSent', 'desc'),
+      startAfter(latestMessage),
+      limit(paginationLimit),
+    );
+
+    getDocs(queryNextMessages).then((docsSnapshot) => {
+      const listMessages: ChatMessage[] = [];
+      docsSnapshot.forEach((docSnapshot) => {
+        const messageData = {
+          id: docSnapshot.id,
+          ...docSnapshot.data(),
+        } as ChatMessage;
+        listMessages.push(messageData);
+      });
+
+      if (!listMessages.length) {
+        setHasNext(false);
+        return;
+      }
+
+      const latestNewMessages = docsSnapshot.docs[docsSnapshot.docs.length - 1];
+      if (
+        listMessages.length === paginationLimit &&
+        latestNewMessages.id !== latestMessage?.id
+      ) {
+        setHasNext(true);
+      } else {
+        setHasNext(false);
+      }
+
+      setLatestMessage(latestNewMessages);
+
+      setMessages((prev) => [...(prev ?? []), ...listMessages]);
+    });
+  };
 
   // effects
   useEffect(() => {
     setIsLoadingMessages(true);
     const queryMessages = query(
       collection(firebaseDb, 'chats', chatInfo.id, 'messages'),
-      orderBy('timeSent'),
+      orderBy('timeSent', 'desc'),
+      limit(paginationLimit),
     );
     const unSub = onSnapshot(
       queryMessages,
@@ -45,6 +111,12 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
             } as ChatMessage;
             listMessages.push(messageData);
           });
+          setLatestMessage(
+            messagesSnapshot.docs[messagesSnapshot.docs.length - 1],
+          );
+          if (listMessages.length === paginationLimit) {
+            setHasNext(true);
+          }
           setMessages(listMessages);
         } else {
           setMessages(null);
@@ -72,28 +144,80 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
 
   // TODO pagination with messages data
 
-  let latestMessageUserId: string | null = null;
-  const chatContent = messages?.map((item) => {
+  let lastMessageUserId: string | null = null;
+  const chatContent = messages?.map((item, index) => {
     const isYou = item.senderId === userInfo?.userId;
     let subContent = null;
-    if (latestMessageUserId !== item.senderId) {
-      latestMessageUserId = item.senderId;
+
+    if (index === messages.length - 1) {
       subContent = (
         <MessageUserInfo
           userInfo={chatInfo.users[item.senderId]}
           isYou={isYou}
         />
       );
+    } else if (
+      lastMessageUserId &&
+      lastMessageUserId !== messages[index + 1].senderId
+    ) {
+      lastMessageUserId = messages[index + 1].senderId;
+      subContent = (
+        <MessageUserInfo
+          userInfo={chatInfo.users[item.senderId]}
+          isYou={isYou}
+        />
+      );
+    } else if (!lastMessageUserId) {
+      lastMessageUserId = item.senderId;
     }
+
     return (
       <Fragment key={item.id}>
-        {subContent}
         <MessageItem isYour={isYou} item={item} />
+        {subContent}
       </Fragment>
     );
   });
 
-  return chatContent;
+  return (
+    <InfiniteScroll
+      dataLength={messages?.length ?? 0}
+      next={fetchNextMessages}
+      hasMore={hasNext}
+      loader={
+        <Typography
+          sx={{
+            fontSize: textTypo.medium,
+            textAlign: 'center',
+            fontWeight: 'bold',
+            color: textColor.lighter,
+          }}
+        >
+          Loading more message ...
+        </Typography>
+      }
+      endMessage={
+        <Typography
+          sx={{
+            fontSize: textTypo.medium,
+            textAlign: 'center',
+            fontWeight: 'bold',
+            color: textColor.lighter,
+          }}
+        >
+          No more message
+        </Typography>
+      }
+      scrollableTarget="scrollableDiv"
+      inverse
+      style={{
+        display: 'flex',
+        flexDirection: 'column-reverse',
+      }}
+    >
+      {chatContent}
+    </InfiniteScroll>
+  );
 }
 
 export default MessageContent;
