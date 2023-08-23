@@ -42,7 +42,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     const currentTime = firestore.Timestamp.now();
     const updateLatestMessage = chatRef.update({
       latestMessage: {
-        messageContent: messageText,
+        content: messageText,
         timeSent: currentTime,
       },
     });

@@ -19,6 +19,8 @@ export interface ChatRaw {
   type: ChatType;
 }
 
+export type ChatRawWithId = ChatRaw & { id: string };
+
 export interface ChatInformation {
   id: string;
   participants: { [key: string]: User };

@@ -17,7 +17,7 @@ function PinChats() {
         />
       }
     >
-      <UserItem chatId="12345" />
+      {/* <UserItem chatId="12345" /> */}
     </ContentBox>
   );
 }
