@@ -149,6 +149,8 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
     const isYou = item.senderId === userInfo?.userId;
     let subContent = null;
 
+    lastMessageUserId = item.senderId;
+
     if (index === messages.length - 1) {
       subContent = (
         <MessageUserInfo
@@ -156,10 +158,7 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
           isYou={isYou}
         />
       );
-    } else if (
-      lastMessageUserId &&
-      lastMessageUserId !== messages[index + 1].senderId
-    ) {
+    } else if (lastMessageUserId !== messages[index + 1].senderId) {
       lastMessageUserId = messages[index + 1].senderId;
       subContent = (
         <MessageUserInfo
@@ -167,8 +166,6 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
           isYou={isYou}
         />
       );
-    } else if (!lastMessageUserId) {
-      lastMessageUserId = item.senderId;
     }
 
     return (

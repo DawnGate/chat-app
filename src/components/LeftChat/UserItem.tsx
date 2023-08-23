@@ -56,7 +56,7 @@ function UserItem({ chatId, chat }: { chatId: string; chat: ChatRawWithId }) {
 
   const textContent = chat.latestMessage?.content;
 
-  const chatUserId = chat.participants.find(
+  const chatUserId = Object.keys(chat.participants).find(
     (userId) => userId !== userInfo?.userId,
   );
 

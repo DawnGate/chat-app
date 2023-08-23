@@ -34,7 +34,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     }
     const decodedClaims = await auth().verifySessionCookie(session, true);
     const currentUid = decodedClaims.uid;
-    if (!chatSnapshot.data()?.participants.includes(currentUid)) {
+    if (!chatSnapshot.data()?.participants[currentUid]) {
       return NextResponse.json({ status: 403 });
     }
 

@@ -10,7 +10,11 @@ export interface ChatMessage {
 }
 
 export interface ChatRaw {
-  participants: string[];
+  participants: {
+    [key: string]: boolean;
+  };
+  // TODO: change latestMessage object to plain
+  // with latestMessagesContent and latestMessagetimeSent
   latestMessage?: {
     content: string;
     timeSent: TimestampClientAdmin;

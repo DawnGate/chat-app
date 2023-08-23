@@ -3,7 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useChatContext } from '@/context/chatContext';
 
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import {
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from 'firebase/firestore';
 import { firebaseDb } from '@/lib/firebase-config';
 
 import { ChatRawWithId } from '@/models/Chat';
@@ -26,7 +32,8 @@ function AllMessages() {
 
     const queryChatsRef = query(
       collection(firebaseDb, 'chats'),
-      where('participants', 'array-contains', userInfo.userId),
+      where(`participants.${userInfo.userId}`, '==', true),
+      // orderBy('latestMessage.timeSent', 'desc'),
     );
 
     const unSub = onSnapshot(queryChatsRef, (querySnapshot) => {
@@ -36,7 +43,9 @@ function AllMessages() {
           id: chatDoc.id,
           ...chatDoc.data(),
         } as ChatRawWithId;
-        listChats.push(chatData);
+        if (chatData.latestMessage) {
+          listChats.push(chatData);
+        }
       });
       setChats(listChats);
     });

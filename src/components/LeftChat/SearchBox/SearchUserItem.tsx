@@ -48,13 +48,17 @@ function SearchUserItem({
       return;
     }
 
-    const chatParticipants = [userInfo?.userId, user.userId];
+    const chatParticipants = {
+      [userInfo.userId]: true,
+      [user.userId]: true,
+    };
 
     const chatsRef = collection(firebaseDb, 'chats');
     const chatQuery = query(
       chatsRef,
       where('type', '==', ChatType.PERSONAL),
-      where('participants', 'array-contains-any', chatParticipants),
+      where(`participants.${userInfo.userId}`, '==', true),
+      where(`participants.${user.userId}`, '==', true),
     );
     getDocs(chatQuery).then((querySnapshot) => {
       if (querySnapshot.empty) {

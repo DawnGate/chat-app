@@ -34,12 +34,12 @@ function RightChatHeader({ chatInfo }: { chatInfo: ChatInformation }) {
     if (!userInfo) return;
     if (
       chatInfo.chat.type !== ChatType.PERSONAL ||
-      !chatInfo.chat.participants.includes(userInfo.userId)
+      !chatInfo.chat.participants[userInfo.userId]
     ) {
       router.push('/404');
     }
 
-    const otherUserId = chatInfo.chat.participants.find(
+    const otherUserId = Object.keys(chatInfo.chat.participants).find(
       (id) => id !== userInfo.userId,
     );
 

@@ -16,7 +16,7 @@ const getChat = async (chatId: string) => {
     }
     const chat = chatSnapshot.data() as ChatRaw;
 
-    const usersRef = chat?.participants.map((userId) =>
+    const usersRef = Object.keys(chat?.participants).map((userId) =>
       getDoc(doc(firebaseDb, 'users', userId)),
     );
 
