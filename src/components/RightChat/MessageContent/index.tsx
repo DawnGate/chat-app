@@ -4,14 +4,12 @@ import {
   DocumentData,
   QueryDocumentSnapshot,
   collection,
-  endBefore,
   getDocs,
   limit,
   onSnapshot,
   orderBy,
   query,
   startAfter,
-  startAt,
 } from 'firebase/firestore';
 import { firebaseDb } from '@/lib/firebase-config';
 
@@ -99,6 +97,9 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
       orderBy('timeSent', 'desc'),
       limit(paginationLimit),
     );
+    // TODO handle new chat coming when chat with other users
+    // because setting pagination and limit, some thing will not
+    // correct flow when chatting
     const unSub = onSnapshot(
       queryMessages,
       (messagesSnapshot) => {
@@ -141,8 +142,6 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
   if (isNotHaveAnyMessage) {
     return <CRMNewMessage />;
   }
-
-  // TODO pagination with messages data
 
   let lastMessageUserId: string | null = null;
   const chatContent = messages?.map((item, index) => {
