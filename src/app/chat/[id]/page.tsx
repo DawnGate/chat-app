@@ -6,42 +6,29 @@ import { ChatInformation, ChatRaw } from '@/models/Chat';
 import User from '@/models/User';
 import { redirect } from 'next/navigation';
 
-const getCheckUser = async (chatId: string) => {
+const getChat = async (chatId: string) => {
   try {
     // check if chatId is valid from p2p chat
-    if (!chatId.includes('_')) {
+    const chatRef = doc(firebaseDb, 'chats', chatId);
+    const chatSnapshot = await getDoc(chatRef);
+    if (!chatSnapshot.exists()) {
       return null;
     }
-    const [firstUserId, secondUserId] = chatId.split('_');
-    const firstUserRef = doc(firebaseDb, 'users', firstUserId);
-    const secondUserRef = doc(firebaseDb, 'users', secondUserId);
+    const chat = chatSnapshot.data() as ChatRaw;
 
-    const [firstUserSnapshot, secondUserSnapshot] = await Promise.all([
-      getDoc(firstUserRef),
-      getDoc(secondUserRef),
-    ]);
+    const usersRef = chat?.participants.map((userId) =>
+      getDoc(doc(firebaseDb, 'users', userId)),
+    );
 
-    if (!(firstUserSnapshot.exists && secondUserSnapshot.exists)) {
-      return null;
-    }
-
-    const docRef = doc(firebaseDb, 'chats', chatId);
-    const docSnap = await getDoc(docRef);
-
-    let chat: ChatRaw | null = null;
-
-    // check if this chatId in chats
-    if (docSnap.exists()) {
-      chat = docSnap.data() as ChatRaw | null;
-    }
+    const usersSnapshot = await Promise.all(usersRef);
+    const listUser = usersSnapshot
+      .map((userSnapshot) => userSnapshot.data() as User)
+      .reduce((result, user) => ({ ...result, [user.userId]: user }), {});
 
     // create newChat information
     const newChat: ChatInformation = {
       id: chatId,
-      users: {
-        [firstUserSnapshot.id]: firstUserSnapshot.data() as User,
-        [secondUserSnapshot.id]: secondUserSnapshot.data() as User,
-      },
+      participants: listUser,
       chat,
     };
 
@@ -54,7 +41,7 @@ const getCheckUser = async (chatId: string) => {
 };
 
 async function ChatIdPage({ params }: { params: { id: string } }) {
-  const chatInfo: ChatInformation | null = await getCheckUser(params.id);
+  const chatInfo: ChatInformation | null = await getChat(params.id);
 
   if (!chatInfo) {
     redirect('/404');

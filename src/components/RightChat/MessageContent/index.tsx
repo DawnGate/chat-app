@@ -15,6 +15,8 @@ import { firebaseDb } from '@/lib/firebase-config';
 
 import InfiniteScroll from 'react-infinite-scroll-component';
 
+import Typography from '@mui/material/Typography';
+
 import { Fragment, useEffect, useState } from 'react';
 import { useChatContext } from '@/context/chatContext';
 
@@ -23,7 +25,6 @@ import { ChatInformation, ChatMessage } from '@/models/Chat';
 import Spinner from '@/components/Spinner';
 import CRMNewMessage from '@/components/CRNMessage';
 
-import { Typography } from '@mui/material';
 import { textTypo } from '@/config/typography';
 import { textColor } from '@/config/colors';
 
@@ -151,7 +152,7 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
     if (index === messages.length - 1) {
       subContent = (
         <MessageUserInfo
-          userInfo={chatInfo.users[item.senderId]}
+          userInfo={chatInfo.participants[item.senderId]}
           isYou={isYou}
         />
       );
@@ -162,7 +163,7 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
       lastMessageUserId = messages[index + 1].senderId;
       subContent = (
         <MessageUserInfo
-          userInfo={chatInfo.users[item.senderId]}
+          userInfo={chatInfo.participants[item.senderId]}
           isYou={isYou}
         />
       );

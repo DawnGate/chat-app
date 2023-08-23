@@ -1,3 +1,4 @@
+import { ChatType } from '@/config/constant';
 import { TimestampClientAdmin } from './Timestamp';
 import User from './User';
 
@@ -9,16 +10,18 @@ export interface ChatMessage {
 }
 
 export interface ChatRaw {
-  users: string[];
-  latestMessage: {
+  participants: string[];
+  latestMessage?: {
     content: string;
     timeSent: TimestampClientAdmin;
   };
+  createdTimestamp: TimestampClientAdmin;
+  type: ChatType;
 }
 
 export interface ChatInformation {
   id: string;
-  users: { [key: string]: User };
+  participants: { [key: string]: User };
   // exist when have data chat
-  chat: ChatRaw | null;
+  chat: ChatRaw;
 }

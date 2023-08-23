@@ -7,7 +7,6 @@ import {
   collection,
   getDocs,
   limit,
-  or,
   query,
   where,
 } from 'firebase/firestore';
@@ -77,34 +76,9 @@ function SearchUserBox() {
 
       const querySearchUser = query(
         usersRef,
-        or(
-          // query as-is:
-          and(
-            where('email', '>=', trimmedDebounceSearchText),
-            where('email', '<=', `${trimmedDebounceSearchText}\uf8ff`),
-          ),
-          // capitalize first letter:
-          // and(
-          //   where(
-          //     'name',
-          //     '>=',
-          //     trimmedSearchText.charAt(0).toUpperCase() +
-          //       trimmedSearchText.slice(1),
-          //   ),
-          //   where(
-          //     'name',
-          //     '<=',
-          //     `${
-          //       trimmedSearchText.charAt(0).toUpperCase() +
-          //       trimmedSearchText.slice(1)
-          //     }\uf8ff`,
-          //   ),
-          // ),
-          // lowercase:
-          // and(
-          //   where('name', '>=', trimmedSearchText.toLowerCase()),
-          //   where('name', '<=', `${trimmedSearchText.toLowerCase()}\uf8ff`),
-          // ),
+        and(
+          where('email', '>=', trimmedDebounceSearchText),
+          where('email', '<=', `${trimmedDebounceSearchText}\uf8ff`),
         ),
         limit(10),
       );
@@ -121,7 +95,7 @@ function SearchUserBox() {
       });
     };
     handleSearchFirestore();
-  }, [trimmedDebounceSearchText]);
+  }, [trimmedDebounceSearchText, userInfo?.userId]);
   //
   const searchContent = searchUsers ? (
     <Stack spacing={0.5}>

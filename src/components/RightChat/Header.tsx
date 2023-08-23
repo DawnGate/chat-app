@@ -19,8 +19,9 @@ import { ChatInformation } from '@/models/Chat';
 
 // types
 import User from '@/models/User';
+import { ChatType } from '@/config/constant';
 
-function RightChatHeader({ chatInfo }: { chatInfo: ChatInformation | null }) {
+function RightChatHeader({ chatInfo }: { chatInfo: ChatInformation }) {
   // hooks
   const router = useRouter();
   const { userInfo } = useChatContext();
@@ -28,20 +29,29 @@ function RightChatHeader({ chatInfo }: { chatInfo: ChatInformation | null }) {
   // state
   const [otherUserInfo, setOtherUserInfo] = useState<User | null>(null);
 
-  // variables
-  const usersIdMap = Object.keys(chatInfo?.users ?? {});
-
   // effects
   useEffect(() => {
     if (!userInfo) return;
-    if (!usersIdMap?.includes(userInfo.userId)) {
+    if (
+      chatInfo.chat.type !== ChatType.PERSONAL ||
+      !chatInfo.chat.participants.includes(userInfo.userId)
+    ) {
       router.push('/404');
     }
-    const otherUserId = usersIdMap?.find((id) => id !== userInfo.userId);
 
-    const otherUser = chatInfo?.users?.[otherUserId as string];
+    const otherUserId = chatInfo.chat.participants.find(
+      (id) => id !== userInfo.userId,
+    );
+
+    const otherUser = chatInfo.participants?.[otherUserId as string];
     setOtherUserInfo(otherUser ?? null);
-  }, [userInfo, router, usersIdMap]);
+  }, [
+    chatInfo.chat.type,
+    chatInfo.chat.participants,
+    userInfo,
+    router,
+    chatInfo.participants,
+  ]);
 
   // render
   return (

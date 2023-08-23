@@ -12,7 +12,12 @@ import { captionTypo } from '@/config/typography';
 
 function CRMNewMessage() {
   return (
-    <Box display="flex" justifyContent="center">
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100%"
+    >
       <Box
         sx={{
           px: 1,

@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useChatContext } from '@/context/chatContext';
 
-import { collection, query } from 'firebase/firestore';
+import { collection, doc, onSnapshot, query } from 'firebase/firestore';
 import { firebaseDb } from '@/lib/firebase-config';
 
 import ContentBox from './ContentBox';
@@ -17,9 +17,8 @@ function AllMessages() {
     if (!userInfo?.userId) {
       return;
     }
-    const queryChats = query(
-      collection(firebaseDb, 'userChat', userInfo.userId, 'chats'),
-    );
+
+    const queryChats = query(collection(firebaseDb, 'chats'));
     const unSub = () => {};
   }, [userInfo?.userId]);
   // TODO display history message

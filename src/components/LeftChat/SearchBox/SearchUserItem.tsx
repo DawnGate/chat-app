@@ -20,6 +20,16 @@ import {
   threeDotTextOverflow,
 } from '@/config/typography';
 import { borderRadius } from '@/config/border';
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  serverTimestamp,
+  where,
+} from 'firebase/firestore';
+import { firebaseDb } from '@/lib/firebase-config';
+import { ChatType } from '@/config/constant';
 
 function SearchUserItem({
   user,
@@ -31,6 +41,44 @@ function SearchUserItem({
   // hooks
   const { userInfo } = useChatContext();
   const router = useRouter();
+
+  // event
+  const handleClickUserItem = () => {
+    if (!userInfo?.userId) {
+      return;
+    }
+
+    const chatParticipants = [userInfo?.userId, user.userId];
+
+    const chatsRef = collection(firebaseDb, 'chats');
+    const chatQuery = query(
+      chatsRef,
+      where('type', '==', ChatType.PERSONAL),
+      where('participants', 'array-contains-any', chatParticipants),
+    );
+    getDocs(chatQuery).then((querySnapshot) => {
+      if (querySnapshot.empty) {
+        addDoc(collection(firebaseDb, 'chats'), {
+          participants: chatParticipants,
+          type: ChatType.PERSONAL,
+          createdTimestamp: serverTimestamp(),
+        }).then((docRef) => {
+          const chatId = docRef.id;
+          const chatPath = `/chat/${chatId}`;
+          handleCloseSearch();
+          router.push(chatPath);
+        });
+        return;
+      }
+      querySnapshot.forEach((docSnapshot) => {
+        const chatId = docSnapshot.id;
+        const chatPath = `/chat/${chatId}`;
+        handleCloseSearch();
+        router.push(chatPath);
+      });
+    });
+  };
+
   // render
   return (
     <Box
@@ -45,18 +93,7 @@ function SearchUserItem({
         cursor: 'pointer',
         position: 'relative',
       }}
-      onClick={() => {
-        if (!userInfo?.userId) {
-          return;
-        }
-        const chatId =
-          userInfo.userId > user.userId
-            ? `${user.userId}_${userInfo.userId}`
-            : `${userInfo.userId}_${user.userId}`;
-        const chatPath = `/chat/${chatId}`;
-        handleCloseSearch();
-        router.push(chatPath);
-      }}
+      onClick={handleClickUserItem}
     >
       <Stack direction="row" spacing={1} py={1} px={2}>
         <Avatar alt={user.displayName} src={user.photoURL} />
