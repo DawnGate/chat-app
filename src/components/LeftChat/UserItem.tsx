@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useChatContext } from '@/context/chatContext';
 
 import { firebaseDb } from '@/lib/firebase-config';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
@@ -64,15 +64,12 @@ function UserItem({ chatId, chat }: { chatId: string; chat: ChatRawWithId }) {
   useEffect(() => {
     if (!chatUserId) {
       router.push('404');
-      return undefined;
+      return;
     }
     const useRef = doc(firebaseDb, 'users', chatUserId);
-    const unSub = onSnapshot(useRef, (userSnapshot) => {
+    getDoc(useRef).then((userSnapshot) => {
       setUserChat(userSnapshot.data() as User);
     });
-    return () => {
-      unSub();
-    };
   }, [chatUserId, router]);
 
   // render

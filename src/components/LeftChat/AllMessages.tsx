@@ -36,6 +36,8 @@ function AllMessages() {
       // orderBy('latestMessage.timeSent', 'desc'),
     );
 
+    // ! When using onSnapshot, clear about your action will
+    // ! not making infinite loop to exceed quota
     const unSub = onSnapshot(queryChatsRef, (querySnapshot) => {
       const listChats: ChatRawWithId[] = [];
       querySnapshot.forEach((chatDoc) => {

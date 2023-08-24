@@ -39,23 +39,23 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
 
   // local states
   const [messages, setMessages] = useState<ChatMessage[] | null>(null);
-  const [isLoadingMessages, setIsLoadingMessages] = useState<boolean>(true);
-  const [latestMessage, setLatestMessage] = useState<QueryDocumentSnapshot<
+  const [isLoadingInitMessages, setIsLoadingInitMessages] =
+    useState<boolean>(true);
+  const [oldestMessage, setOldestMessage] = useState<QueryDocumentSnapshot<
     DocumentData,
     DocumentData
   > | null>(null);
   const [hasNext, setHasNext] = useState<boolean>(false);
 
   // local variables
-  const isLoading = isLoadingMessages;
-  const isNotHaveAnyMessage = !isLoadingMessages && !messages;
+  const isNotHaveAnyMessage = !isLoadingInitMessages && !messages;
 
   // events
   const fetchNextMessages = () => {
     const queryNextMessages = query(
       collection(firebaseDb, 'chats', chatInfo.id, 'messages'),
       orderBy('timeSent', 'desc'),
-      startAfter(latestMessage),
+      startAfter(oldestMessage),
       limit(paginationLimit),
     );
 
@@ -77,14 +77,14 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
       const latestNewMessages = docsSnapshot.docs[docsSnapshot.docs.length - 1];
       if (
         listMessages.length === paginationLimit &&
-        latestNewMessages.id !== latestMessage?.id
+        latestNewMessages.id !== oldestMessage?.id
       ) {
         setHasNext(true);
       } else {
         setHasNext(false);
       }
 
-      setLatestMessage(latestNewMessages);
+      setOldestMessage(latestNewMessages);
 
       setMessages((prev) => [...(prev ?? []), ...listMessages]);
     });
@@ -92,15 +92,55 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
 
   // effects
   useEffect(() => {
-    setIsLoadingMessages(true);
     const queryMessages = query(
       collection(firebaseDb, 'chats', chatInfo.id, 'messages'),
       orderBy('timeSent', 'desc'),
       limit(paginationLimit),
     );
-    // TODO handle new chat coming when chat with other users
-    // because setting pagination and limit, some thing will not
-    // correct flow when chatting
+
+    getDocs(queryMessages)
+      .then((messagesSnapshot) => {
+        const listMessages: ChatMessage[] = [];
+
+        if (!messagesSnapshot.empty) {
+          messagesSnapshot.forEach((messageSnapshot) => {
+            const messageData = {
+              id: messageSnapshot.id,
+              ...messageSnapshot.data(),
+            } as ChatMessage;
+            listMessages.push(messageData);
+          });
+        }
+
+        if (listMessages.length === paginationLimit) {
+          setHasNext(true);
+          setOldestMessage(
+            messagesSnapshot.docs[messagesSnapshot.docs.length - 1],
+          );
+        }
+
+        if (listMessages.length) {
+          setMessages(listMessages);
+        }
+      })
+      .finally(() => {
+        setIsLoadingInitMessages(false);
+      });
+  }, [chatInfo.id]);
+
+  useEffect(() => {
+    if (isLoadingInitMessages) {
+      return undefined;
+    }
+    // load latest query
+    const queryMessages = query(
+      collection(firebaseDb, 'chats', chatInfo.id, 'messages'),
+      orderBy('timeSent', 'desc'),
+      limit(1),
+    );
+
+    // ! When using onSnapshot, clear about your action will
+    // ! not making infinite loop to exceed quota
     const unSub = onSnapshot(
       queryMessages,
       (messagesSnapshot) => {
@@ -113,30 +153,33 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
             } as ChatMessage;
             listMessages.push(messageData);
           });
-          setLatestMessage(
-            messagesSnapshot.docs[messagesSnapshot.docs.length - 1],
-          );
-          if (listMessages.length === paginationLimit) {
-            setHasNext(true);
-          }
-          setMessages(listMessages);
-        } else {
-          setMessages(null);
         }
-        setIsLoadingMessages(false);
+
+        if (listMessages.length) {
+          setMessages((prev) => {
+            const newestMessage = listMessages[0];
+            if (!prev?.length) {
+              return [newestMessage];
+            }
+            const isHadNewMessage = newestMessage.id === prev[0].id;
+            if (isHadNewMessage) {
+              return prev;
+            }
+            return [newestMessage, ...prev];
+          });
+        }
       },
       (err) => {
         console.log(err);
-        setIsLoadingMessages(false);
       },
     );
     return () => {
       unSub();
     };
-  }, [chatInfo.id]);
+  }, [chatInfo.id, isLoadingInitMessages]);
 
   // content
-  if (isLoading) {
+  if (isLoadingInitMessages) {
     return <Spinner />;
   }
 
