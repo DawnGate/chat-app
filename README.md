@@ -1,34 +1,51 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Introduction
 
-## Getting Started
+This app focus on create a chat application like Telegram
 
-First, run the development server:
+# Structure
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+I use nextjs 13 version to create new chat, all thing from doc of nextjs
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ui using material ui: version 5
+nextjs routing api for backend
+using firebase for database
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+build: vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+# Feature
 
-## Learn More
+- Homepage
 
-To learn more about Next.js, take a look at the following resources:
+- Authentication
+- User Information
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Personal chat
+- Group chat
+- Message: text, file, image
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Other feature:
 
-## Deploy on Vercel
+- reaction message
+- counting new chat message
+- delete message, chat, ...
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Road map
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## July to 24 Aug 2023
+
+- Simple authentication and management session of user login
+- Create simple layout
+- Chat "text" with personal chat (create chatbox, chat pagination and new chat message)
+- View personal chat history
+
+## Start of Oct 2023
+
+- Group chat
+- Chat with file and image
+- View information of user(currentUser and chatUser)
+- Detail and update new layout
+- Homepage
+
+## Later: some main feature and ui
+
+- improve mobile ui

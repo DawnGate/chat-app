@@ -5,10 +5,13 @@ export default function Home() {
   return (
     <Box>
       <Link href="/chat">
-        <Button variant="contained">Home Page</Button>
+        <Button variant="contained">Chat Page</Button>
       </Link>
-      <Typography variant="h1" color="primary">
-        Testing
+      <Typography>
+        Note: (when you already login and still have session)
+      </Typography>
+      <Typography variant="h3" color="primary">
+        Click to login link to start
       </Typography>
       <Link href="/login">
         <p>Login</p>
