@@ -30,7 +30,7 @@ function LeftChat() {
               Messages
             </Typography>
             <Typography variant="body1" color="primary" fontWeight={600} ml={1}>
-              13
+              0
               <Typography variant="caption" fontWeight={600} ml={0.5}>
                 New
               </Typography>

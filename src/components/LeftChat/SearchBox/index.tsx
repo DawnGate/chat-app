@@ -156,7 +156,9 @@ function SearchUserBox() {
           sx={{
             mt: 1,
             height: 300,
+            overflow: 'auto',
           }}
+          className="custom-scrollbar"
         >
           {searchContent}
         </Box>
