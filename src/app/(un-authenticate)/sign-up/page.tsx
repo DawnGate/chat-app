@@ -18,6 +18,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import CircularProgress from '@mui/material/CircularProgress';
 
 // components
 import CTextField from '@/components/CTextField';
@@ -76,12 +77,15 @@ function SignUp() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
+  const [isSignUp, setIsSignUp] = useState<boolean>(false);
 
   // events
   const handleOnSubmit: SubmitHandler<UserScheme> = (data) => {
+    setIsSignUp(true);
     createUserWithEmailAndPassword(firebaseAuth, data.email, data.newPassword)
       .then((userCredential) => {
         if (!userCredential) {
+          setIsSignUp(false);
           return;
         }
 
@@ -119,6 +123,9 @@ function SignUp() {
           })
           .catch((err) => {
             console.log('error', err);
+          })
+          .finally(() => {
+            setIsSignUp(false);
           });
       })
       .catch((error) => {
@@ -127,6 +134,7 @@ function SignUp() {
         } else {
           setError('email', { message: 'Some thing error has occur' });
         }
+        setIsSignUp(false);
       });
   };
 
@@ -143,6 +151,7 @@ function SignUp() {
             formId="sign-up-email"
             error={Boolean(errors.email)}
             helperText={errors.email?.message}
+            disabled={isSignUp}
             inputBoxProps={{
               type: 'email',
               autoComplete: 'email',
@@ -157,6 +166,7 @@ function SignUp() {
             formId="sign-up-new-password"
             error={Boolean(errors.newPassword)}
             helperText={errors.newPassword?.message}
+            disabled={isSignUp}
             inputBoxProps={{
               type: showPassword ? 'text' : 'password',
               register: register('newPassword'),
@@ -199,6 +209,7 @@ function SignUp() {
             formId="sign-up-confirm-new-password"
             error={Boolean(errors.confirmNewPassword)}
             helperText={errors.confirmNewPassword?.message}
+            disabled={isSignUp}
             inputBoxProps={{
               type: showConfirmPassword ? 'text' : 'password',
               register: register('confirmNewPassword'),
@@ -256,10 +267,20 @@ function SignUp() {
           fullWidth
           color="inherit"
           type="submit"
+          disabled={isSignUp}
         >
-          <Typography variant="body1" fontWeight={600}>
-            Sign up now
-          </Typography>
+          {isSignUp ? (
+            <CircularProgress
+              size={24}
+              sx={{
+                color: 'red',
+              }}
+            />
+          ) : (
+            <Typography variant="body1" fontWeight={600}>
+              Sign up now
+            </Typography>
+          )}
         </Button>
       </form>
       <Typography variant="caption" mt={2}>

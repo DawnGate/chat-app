@@ -21,6 +21,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import CircularProgress from '@mui/material/CircularProgress';
 
 // colors
 import { blue } from '@mui/material/colors';
@@ -65,9 +66,11 @@ function LoginPage() {
 
   // state
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
 
   // events
   const handleOnSubmit = (data: UserScheme) => {
+    setIsLogin(true);
     signInWithEmailAndPassword(firebaseAuth, data.email, data.password)
       .then((userCred) => {
         if (!userCred) {
@@ -99,6 +102,9 @@ function LoginPage() {
         } else {
           setError('password', { message: signInError.default });
         }
+      })
+      .finally(() => {
+        setIsLogin(false);
       });
   };
 
@@ -115,6 +121,7 @@ function LoginPage() {
             formId="login-email"
             error={Boolean(errors.email)}
             helperText={errors.email?.message}
+            disabled={isLogin}
             inputBoxProps={{
               type: 'email',
               autoComplete: 'email',
@@ -129,6 +136,7 @@ function LoginPage() {
             formId="login-password"
             error={Boolean(errors.password)}
             helperText={errors.password?.message}
+            disabled={isLogin}
             inputBoxProps={{
               type: showPassword ? 'text' : 'password',
               register: register('password'),
@@ -182,10 +190,20 @@ function LoginPage() {
           fullWidth
           color="inherit"
           type="submit"
+          disabled={isLogin}
         >
-          <Typography variant="body1" fontWeight={600}>
-            Log in
-          </Typography>
+          {isLogin ? (
+            <CircularProgress
+              size={24}
+              sx={{
+                color: 'red',
+              }}
+            />
+          ) : (
+            <Typography variant="body1" fontWeight={600}>
+              Log in
+            </Typography>
+          )}
         </Button>
       </form>
       <Typography variant="caption" mt={2}>

@@ -11,6 +11,7 @@ export async function middleware(request: NextRequest, response: NextResponse) {
   const session = request.cookies.get('session');
 
   if (!session) {
+    console.log('return login');
     return NextResponse.redirect(new URL('/login', baseUrl));
   }
 
@@ -21,9 +22,11 @@ export async function middleware(request: NextRequest, response: NextResponse) {
   });
 
   if (responseAPI.status !== 200) {
+    console.log('return login', responseAPI);
     return NextResponse.redirect(new URL('/login', baseUrl));
   }
 
+  console.log('continue');
   return NextResponse.next();
 }
 

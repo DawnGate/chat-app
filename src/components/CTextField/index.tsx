@@ -40,6 +40,7 @@ interface Props {
   formId: string;
   helperText?: string;
   error?: boolean;
+  disabled?: boolean;
   inputBoxProps?: {
     register?: UseFormRegisterReturn;
   } & InputBaseProps;
@@ -52,6 +53,7 @@ function CTextField(props: Props) {
     formId = 'test',
     helperText = '',
     error = false,
+    disabled = false,
     inputBoxProps = {
       register: null,
     },
@@ -59,7 +61,7 @@ function CTextField(props: Props) {
   // return
 
   return (
-    <FormControl variant="standard" error={error} fullWidth>
+    <FormControl variant="standard" error={error} disabled={disabled} fullWidth>
       <InputLabel shrink htmlFor={formId} sx={{ ml: 2, fontWeight: 'medium' }}>
         {label}
       </InputLabel>
