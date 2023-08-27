@@ -35,9 +35,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
 
-// hooks
-import { useRouter } from 'next/navigation';
-
 const userScheme = z
   .object({
     email: z
@@ -72,7 +69,7 @@ function SignUp() {
   } = useForm<UserScheme>({
     resolver: zodResolver(userScheme),
   });
-  const router = useRouter();
+
   // local state
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
@@ -116,15 +113,15 @@ function SignUp() {
                 },
               }).then((loginRes) => {
                 if (loginRes.status === 200) {
-                  router.replace('/chat');
+                  window.location.href = '/chat';
+                } else {
+                  setIsSignUp(false);
                 }
               });
             });
           })
           .catch((err) => {
             console.log('error', err);
-          })
-          .finally(() => {
             setIsSignUp(false);
           });
       })
