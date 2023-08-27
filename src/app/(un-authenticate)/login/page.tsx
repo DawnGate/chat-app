@@ -85,7 +85,10 @@ function LoginPage() {
             },
           }).then((loginRes) => {
             if (loginRes.status === 200) {
-              router.replace('/chat');
+              router.refresh();
+              router.push('/chat');
+            } else {
+              setIsLogin(false);
             }
           });
         });
@@ -102,8 +105,6 @@ function LoginPage() {
         } else {
           setError('password', { message: signInError.default });
         }
-      })
-      .finally(() => {
         setIsLogin(false);
       });
   };

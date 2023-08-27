@@ -28,6 +28,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
         maxAge: expiresInSecond,
         httpOnly: true,
         sameSite: 'lax',
+        // * when using ios Device with localhost, remove secure code below
         ...(isProduction && {
           secure: true,
         }),

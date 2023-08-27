@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(request: NextRequest, response: NextResponse) {
+  // * problem with middleware cache when first time login
+  // * so if the cache mot miss and clear, the router will not trigger
+  // * middle ware again: currently by pass using router.refresh() or window.location.href =
   // log url
   const { pathname } = request.nextUrl;
-  console.log(pathname);
+  console.log(pathname, request.geo, request.ip);
   // init data
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -11,7 +14,6 @@ export async function middleware(request: NextRequest, response: NextResponse) {
   const session = request.cookies.get('session');
 
   if (!session) {
-    console.log('return login');
     return NextResponse.redirect(new URL('/login', baseUrl));
   }
 
@@ -22,11 +24,9 @@ export async function middleware(request: NextRequest, response: NextResponse) {
   });
 
   if (responseAPI.status !== 200) {
-    console.log('return login', responseAPI);
     return NextResponse.redirect(new URL('/login', baseUrl));
   }
 
-  console.log('continue');
   return NextResponse.next();
 }
 
