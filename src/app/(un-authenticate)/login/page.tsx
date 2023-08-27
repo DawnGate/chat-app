@@ -82,7 +82,7 @@ function LoginPage() {
             },
           }).then((loginRes) => {
             if (loginRes.status === 200) {
-              router.push('/chat');
+              router.replace('/chat');
             }
           });
         });
