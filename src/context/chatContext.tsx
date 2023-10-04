@@ -47,24 +47,27 @@ const chatReducer = (state: IReducer, action: ChatActionMap) => {
 function ChatProvider({ children }: { children: ReactNode }) {
   const [value, dispatch] = useReducer(chatReducer, initValue);
 
-  const handleActions = {
-    updateUserInfo: (userInfo: User) => {
-      dispatch({
-        type: ChatActionType.UPDATE_USER_INFO,
-        payload: {
-          userInfo,
-        },
-      });
-    },
-    toggleMenuDrawer: (valueMenu: boolean) => {
-      dispatch({
-        type: ChatActionType.TOGGLE_MENU_DRAWER,
-        payload: {
-          menuDrawerValue: valueMenu,
-        },
-      });
-    },
-  };
+  const handleActions = useMemo(
+    () => ({
+      updateUserInfo: (userInfo: User) => {
+        dispatch({
+          type: ChatActionType.UPDATE_USER_INFO,
+          payload: {
+            userInfo,
+          },
+        });
+      },
+      toggleMenuDrawer: (valueMenu: boolean) => {
+        dispatch({
+          type: ChatActionType.TOGGLE_MENU_DRAWER,
+          payload: {
+            menuDrawerValue: valueMenu,
+          },
+        });
+      },
+    }),
+    [],
+  );
 
   // effects
   useEffect(() => {
@@ -84,7 +87,7 @@ function ChatProvider({ children }: { children: ReactNode }) {
     return () => {
       unSubscribe();
     };
-  }, []);
+  }, [handleActions]);
 
   const memoValue = useMemo(() => {
     return {
@@ -92,7 +95,7 @@ function ChatProvider({ children }: { children: ReactNode }) {
       showMenuDrawer: value.showMenuDrawer,
       ...handleActions,
     };
-  }, [value.userInfo, value.showMenuDrawer]);
+  }, [value.userInfo, value.showMenuDrawer, handleActions]);
 
   return (
     <ChatContext.Provider value={memoValue}>{children}</ChatContext.Provider>
