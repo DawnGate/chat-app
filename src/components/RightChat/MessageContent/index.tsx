@@ -1,17 +1,21 @@
+/* eslint-disable no-underscore-dangle */
+
 'use client';
 
+import { Timestamp } from 'firebase/firestore';
+
 import {
-  DocumentData,
-  QueryDocumentSnapshot,
-  collection,
-  getDocs,
-  limit,
-  onSnapshot,
-  orderBy,
-  query,
-  startAfter,
-} from 'firebase/firestore';
-import { firebaseDb } from '@/lib/firebase-config';
+  ref,
+  query as dbQuery,
+  child,
+  get,
+  orderByChild,
+  endBefore as dbEndBefore,
+  onChildAdded,
+  limitToLast,
+} from 'firebase/database';
+
+import { firebaseDatabase } from '@/lib/firebase-config';
 
 import InfiniteScroll from 'react-infinite-scroll-component';
 
@@ -31,7 +35,7 @@ import { textColor } from '@/config/colors';
 import MessageUserInfo from '../MessageBox/MessageUserInfo';
 import MessageItem from '../MessageBox/MessageItem';
 
-const paginationLimit = 20;
+const paginationLimit = 10;
 
 function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
   // hooks
@@ -41,10 +45,7 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
   const [messages, setMessages] = useState<ChatMessage[] | null>(null);
   const [isLoadingInitMessages, setIsLoadingInitMessages] =
     useState<boolean>(true);
-  const [oldestMessage, setOldestMessage] = useState<QueryDocumentSnapshot<
-    DocumentData,
-    DocumentData
-  > | null>(null);
+
   const [hasNext, setHasNext] = useState<boolean>(false);
 
   // local variables
@@ -52,76 +53,100 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
 
   // events
   const fetchNextMessages = () => {
-    const queryNextMessages = query(
-      collection(firebaseDb, 'chats', chatInfo.id, 'messages'),
-      orderBy('timeSent', 'desc'),
-      startAfter(oldestMessage),
-      limit(paginationLimit),
+    // fetch old message
+    const messageLength = messages?.length;
+    if (!messageLength) return;
+    const latestMessage = messages[messageLength - 1];
+    const dbRef = ref(firebaseDatabase);
+
+    const queryDb = dbQuery(
+      child(dbRef, `messages/${chatInfo.id}`),
+      orderByChild('timeSent'),
+      dbEndBefore(latestMessage.timeSent.toMillis(), latestMessage.id),
+      limitToLast(paginationLimit),
     );
 
-    getDocs(queryNextMessages).then((docsSnapshot) => {
-      const listMessages: ChatMessage[] = [];
-      docsSnapshot.forEach((docSnapshot) => {
-        const messageData = {
-          id: docSnapshot.id,
-          ...docSnapshot.data(),
-        } as ChatMessage;
-        listMessages.push(messageData);
-      });
+    get(queryDb).then((messagesSnapshot) => {
+      let listMessages: ChatMessage[] = [];
 
-      if (!listMessages.length) {
-        setHasNext(false);
-        return;
+      if (messagesSnapshot.exists()) {
+        const messagesVal = messagesSnapshot.val();
+
+        listMessages = Object.keys(messagesVal)
+          .toReversed()
+          .map((key) => {
+            const data = messagesVal[key];
+            const messageData = {
+              ...data,
+              id: key,
+              timeSent: Timestamp.fromMillis(data.timeSent),
+            } as ChatMessage;
+            return messageData;
+          });
+
+        const newMessageLength = listMessages.length;
+
+        if (!newMessageLength) {
+          setHasNext(false);
+          return;
+        }
+
+        if (
+          newMessageLength === paginationLimit &&
+          listMessages[newMessageLength - 1].id !== latestMessage.id
+        ) {
+          setHasNext(true);
+        } else {
+          setHasNext(false);
+        }
+
+        setMessages((prev) => [...(prev ?? []), ...listMessages]);
       }
-
-      const latestNewMessages = docsSnapshot.docs[docsSnapshot.docs.length - 1];
-      if (
-        listMessages.length === paginationLimit &&
-        latestNewMessages.id !== oldestMessage?.id
-      ) {
-        setHasNext(true);
-      } else {
-        setHasNext(false);
-      }
-
-      setOldestMessage(latestNewMessages);
-
-      setMessages((prev) => [...(prev ?? []), ...listMessages]);
     });
   };
 
   // effects
   useEffect(() => {
-    const queryMessages = query(
-      collection(firebaseDb, 'chats', chatInfo.id, 'messages'),
-      orderBy('timeSent', 'desc'),
-      limit(paginationLimit),
+    // init messages updates
+    const dbRef = ref(firebaseDatabase);
+    const queryDb = dbQuery(
+      child(dbRef, `messages/${chatInfo.id}`),
+      orderByChild('timeSent'),
+      limitToLast(paginationLimit),
     );
-
-    getDocs(queryMessages)
+    get(queryDb)
       .then((messagesSnapshot) => {
-        const listMessages: ChatMessage[] = [];
+        let listMessages: ChatMessage[] = [];
 
-        if (!messagesSnapshot.empty) {
-          messagesSnapshot.forEach((messageSnapshot) => {
-            const messageData = {
-              id: messageSnapshot.id,
-              ...messageSnapshot.data(),
-            } as ChatMessage;
-            listMessages.push(messageData);
-          });
-        }
+        if (messagesSnapshot.exists()) {
+          const messagesVal = messagesSnapshot.val();
 
-        if (listMessages.length === paginationLimit) {
-          setHasNext(true);
-          setOldestMessage(
-            messagesSnapshot.docs[messagesSnapshot.docs.length - 1],
-          );
+          let latestMessageKey = null;
+
+          listMessages = Object.keys(messagesVal)
+            .toReversed()
+            .map((key) => {
+              latestMessageKey = key;
+              const data = messagesVal[key];
+              const messageData = {
+                ...data,
+                id: key,
+                timeSent: Timestamp.fromMillis(data.timeSent),
+              } as ChatMessage;
+              return messageData;
+            });
+
+          if (listMessages.length === paginationLimit && latestMessageKey) {
+            setHasNext(true);
+          }
         }
 
         if (listMessages.length) {
           setMessages(listMessages);
         }
+      })
+      .catch((err) => {
+        console.log(err);
       })
       .finally(() => {
         setIsLoadingInitMessages(false);
@@ -129,50 +154,37 @@ function MessageContent({ chatInfo }: { chatInfo: ChatInformation }) {
   }, [chatInfo.id]);
 
   useEffect(() => {
+    // waiting new data when in chat
     if (isLoadingInitMessages) {
       return undefined;
     }
     // load latest query
-    const queryMessages = query(
-      collection(firebaseDb, 'chats', chatInfo.id, 'messages'),
-      orderBy('timeSent', 'desc'),
-      limit(1),
-    );
 
-    // ! When using onSnapshot, clear about your action will
-    // ! not making infinite loop to exceed quota
-    const unSub = onSnapshot(
-      queryMessages,
-      (messagesSnapshot) => {
-        const listMessages: ChatMessage[] = [];
-        if (!messagesSnapshot.empty) {
-          messagesSnapshot.forEach((messageSnapshot) => {
-            const messageData = {
-              id: messageSnapshot.id,
-              ...messageSnapshot.data(),
-            } as ChatMessage;
-            listMessages.push(messageData);
-          });
-        }
-
-        if (listMessages.length) {
-          setMessages((prev) => {
-            const newestMessage = listMessages[0];
-            if (!prev?.length) {
-              return [newestMessage];
-            }
-            const isHadNewMessage = newestMessage.id === prev[0].id;
-            if (isHadNewMessage) {
-              return prev;
-            }
-            return [newestMessage, ...prev];
-          });
-        }
-      },
-      (err) => {
-        console.log(err);
-      },
+    const dbRef = ref(firebaseDatabase);
+    const queryDb = dbQuery(
+      child(dbRef, `messages/${chatInfo.id}`),
+      limitToLast(1),
     );
+    const unSub = onChildAdded(queryDb, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const messageData = {
+          ...data,
+          id: snapshot.key,
+          timeSent: Timestamp.fromMillis(data.timeSent),
+        } as ChatMessage;
+        setMessages((prev) => {
+          if (!prev?.length) {
+            return [messageData];
+          }
+          const isHadNewMessage = messageData.id === prev[0].id;
+          if (isHadNewMessage) {
+            return prev;
+          }
+          return [messageData, ...prev];
+        });
+      }
+    });
     return () => {
       unSub();
     };

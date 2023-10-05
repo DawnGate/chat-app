@@ -62,7 +62,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     messageRef.push().set({
       senderId: currentUid,
       content: messageText,
-      timeSent: currentTime,
+      timeSent: currentTime.toMillis(),
     });
 
     await Promise.all([updateLatestMessage, addNewMessage]);
