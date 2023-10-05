@@ -3,13 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useChatContext } from '@/context/chatContext';
 
-import {
-  collection,
-  onSnapshot,
-  orderBy,
-  query,
-  where,
-} from 'firebase/firestore';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { firebaseDb } from '@/lib/firebase-config';
 
 import { ChatRawWithId } from '@/models/Chat';
@@ -33,7 +27,6 @@ function AllMessages() {
     const queryChatsRef = query(
       collection(firebaseDb, 'chats'),
       where(`participants.${userInfo.userId}`, '==', true),
-      // orderBy('latestMessage.timeSent', 'desc'),
     );
 
     // ! When using onSnapshot, clear about your action will
@@ -57,7 +50,7 @@ function AllMessages() {
     };
   }, [userInfo?.userId]);
 
-  // TODO pagination with list user chat
+  // TODO pagination + lazy load with list user chat
   return (
     <ContentBox title="all message">
       {chats.map((chat) => (

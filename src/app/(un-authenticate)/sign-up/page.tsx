@@ -96,14 +96,7 @@ function SignUp() {
             userId: userCredential.user.uid,
           },
         );
-        const createNewUserChat = setDoc(
-          doc(firebaseDb, 'usersChat', userCredential.user.uid),
-          {
-            email: data.email,
-            chats: [],
-          },
-        );
-        Promise.all([createNewUser, createNewUserChat])
+        Promise.all([createNewUser])
           .then(() => {
             userCredential.user.getIdToken().then((userJwtToken) => {
               fetch('/api/login', {

@@ -6,6 +6,7 @@ const firebaseAdminConfig = {
     clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
     privateKey: process.env.FIREBASE_PRIVATE_KEY,
   }),
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
 };
 
 const firebaseAdminInitApp = () => {

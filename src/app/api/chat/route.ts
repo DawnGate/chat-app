@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { auth, firestore } from 'firebase-admin';
+import { auth, firestore, database } from 'firebase-admin';
 
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -51,6 +51,15 @@ export async function POST(request: NextRequest, response: NextResponse) {
     const messagesRef = chatRef.collection('messages');
 
     const addNewMessage = messagesRef.add({
+      senderId: currentUid,
+      content: messageText,
+      timeSent: currentTime,
+    });
+
+    // add new message with database
+    const realtimeDb = database();
+    const messageRef = realtimeDb.ref('messages').child(chatId);
+    messageRef.push().set({
       senderId: currentUid,
       content: messageText,
       timeSent: currentTime,
